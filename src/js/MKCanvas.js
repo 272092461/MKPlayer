@@ -81,7 +81,7 @@ define(function(){
         comments.forEach(function(comObj,index){
             setFont(comObj);
             setColor(comObj);
-            canvas.fillText(comObj.text,comObj.x,comObj.y);
+            canvas.fillText(comObj.text,comObj.x,comObj.y+comObj.size/1.2);
         });
     }
     

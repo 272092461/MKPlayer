@@ -2,7 +2,7 @@ require.config({
    paths:{
        "MKCanvas":"MKCanvas",
        "commentSpaceAllocator":"commentSpaceAllocator",
-       "CommentBulider":"CommentBuilder",
+       "CommentParser":"CommentParser",
        "CommentLoader":"CommentLoader",
        "run":"run"
    } 
