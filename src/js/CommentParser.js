@@ -57,7 +57,6 @@ define(function(){
         }
     }
     function add(comment){
-        
         binInsert(comment,clist);
     }
     return{

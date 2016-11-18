@@ -4,6 +4,7 @@ require.config({
        "commentSpaceAllocator":"commentSpaceAllocator",
        "CommentParser":"CommentParser",
        "CommentLoader":"CommentLoader",
+       "CommentBuilder":"CommentBuilder",
        "run":"run"
    } 
 });

@@ -91,8 +91,8 @@ define(function(){
         draw:draw,
         setAlpha:setAlpha,
         clear:clear,
-        test:function(text){
-            console.log(canvas.measureText(text));
+        getWidth:function(text){
+            return canvas.measureText(text);
         }
     }
 });
