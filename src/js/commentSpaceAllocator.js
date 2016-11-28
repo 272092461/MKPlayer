@@ -32,7 +32,7 @@ define(["MKCanvas"],function(canvas){
                 var position;
                 while(!find){
                     position = start + parseInt((stop-start)/2);
-                    if(pool[position-1].bottom<=comment.bottom &&       pool[position].bottom>=comment.bottom){
+                    if(pool[position-1].bottom<=comment.bottom && pool[position].bottom>=comment.bottom){
                         find = true;
                         pool.splice(position,0,comment);
                     
@@ -47,18 +47,33 @@ define(["MKCanvas"],function(canvas){
             }
         }
         function willCollide(existed,comment){
-            return existed.stime + existed.ttl >= comment.stime + comment.ttl;
+            /*return existed.stime + existed.ttl >= comment.stime + comment.ttl/4;*/
+            return existed.endTime >= comment.arriveTime || existed.outTime >= comment.stime;
         }
         function pathCheck(y,comment,pool){
             "use strict";
+            var bottom = y+comment.height;
+            var right = comment.right;
             for(let i = 0;i < pool.length;i++){
-                if(pool[i].bottom < y || pool.height > y + comment.height){
+                if(pool[i].y > y){
+                    break;
+                } 
+                if(pool[i].bottom < y || pool[i].y > bottom){
                     continue;
                 }
                 else{
-                    if(willCollide(pool[i],comment)){
-                        return false;
+                    if(comment.x == "middle"){
+                            return false;
                     }
+                    if(willCollide(pool[i], comment)) {
+                            return false;
+                    }
+                   /* if(willCollide(pool[i], comment)) {
+                            return false;
+                    }
+                    if(comment.x == "middle"){
+                        return false;
+                    }*/
                 }
             }
             return true;
@@ -81,6 +96,7 @@ define(["MKCanvas"],function(canvas){
                 if(pool.length == 0){
                     y = 0;
                     comment.pindex = pindex;
+                    pool.push({height:0,bottom:0,x:0,y:0,right:0});
                     return 0;
                 }
                 for(let i = 0;i<pool.length;i++){

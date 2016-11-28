@@ -1,9 +1,12 @@
-define(["MKCanvas","commentSpaceAllocator","CommentLoader","CommentParser","CommentBuilder"],function(MKCanvas,comment,loader,parser,builder){
-   /* MKCanvas.bind(document.getElementsByClassName("MKP-canvas")[0]);                      //MKCanvas test
+define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","CommentBuilder","CommentManager"],function(MKCanvas,comment,loader,parser,builder,manager){
+    /*MKCanvas.bind(document.getElementsByClassName("MKP-canvas")[0]);                      //MKCanvas test
     MKCanvas.add({
         text:"2333",
-        x:30,
+        x:"middle",
         y:1,
+        align_x:"middle",
+        align_y:30,
+        height:25,
         color:13311,
         size:25
     })
@@ -11,14 +14,17 @@ define(["MKCanvas","commentSpaceAllocator","CommentLoader","CommentParser","Comm
     MKCanvas.add({
         text:"陈333",
         x:30,
-        y:26,
+        y:30,
+        align_x:30,
+        align_y:30,
+        height:25,
         color:16777215,
         size:25
         
     })
     
     MKCanvas.draw();
-    MKCanvas.test("2333");*/
+    MKCanvas.getWidth("2333");*/
     
     /*var scrollcomment = comment.create();                                             //commentAllocation test
     var corecomment = comment.create();
@@ -39,9 +45,8 @@ define(["MKCanvas","commentSpaceAllocator","CommentLoader","CommentParser","Comm
         parser.create(xml);
     });*/
     
-    loader.load("comment-science.xml",function(xml){                                  
-        //loader  parser  builder test
-        console.log(xml);
+   /* loader.load("comment-science.xml",function(xml){                                  
+        //loader  parser  builder test;
         builder.init({height:500,
                      width:800,
                      });
@@ -61,9 +66,9 @@ define(["MKCanvas","commentSpaceAllocator","CommentLoader","CommentParser","Comm
         
         for(i = 0;i<runline.length;i++){
             runline[i].align = 3;
-            console.log(runline[i].y);
+            console.log(runline[i].align_y + " " +runline[i].y);
         }
-    });
-    
+    });*/
+    manager.test(document.getElementsByClassName("MKP-canvas")[0],"comment-otsukimi.xml");
     return{};
 });

@@ -22,7 +22,6 @@ define(function(){
             obj.text = d.childNodes[0].nodeValue.replace(/(\/n|\\n|\n|\r\n)/g, "\n")
             add(obj);
         }
-        console.log(clist);
         return clist;
     }
     function binInsert(comment,arr){

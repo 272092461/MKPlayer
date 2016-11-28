@@ -1,13 +1,15 @@
 require.config({
    paths:{
        "MKCanvas":"MKCanvas",
-       "commentSpaceAllocator":"commentSpaceAllocator",
+       "CommentSpaceAllocator":"commentSpaceAllocator",
        "CommentParser":"CommentParser",
        "CommentLoader":"CommentLoader",
        "CommentBuilder":"CommentBuilder",
+       "CommentManager":"CommentManager",
+       "MKPlayer":"MKPlayer",
        "run":"run"
    } 
 });
-require(["run"],function(){
+require(["MKPlayer"],function(){
     
 });

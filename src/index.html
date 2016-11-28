@@ -3,6 +3,11 @@
         <script src="js/require.js" data-main="js/main"></script>
     </head>
     <body style="background:black">
-        <canvas class="MKP-canvas"></canvas>
+        <div style="position:relative">
+            <video width="800px" height="600px" controls autoplay>
+                <source src="otsukimi_recital.mp4" type="video/mp4">
+            </video>
+            <canvas class="MKP-canvas" style="position:absolute;top:0;left:0"></canvas>
+        </div>
     </body>
 </html>

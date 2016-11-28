@@ -34,31 +34,37 @@ define(function(){
  * @property opacity 透明度
  * @property size 字体大小
 */
-    function add(comObj){
-        var temp = setDefault(comObj,{
-            x:10,
-            y:20,
-            color:"black",
-            opacity:1,
-            size:16
-        });
-        if(temp){
-            comments.push(temp);
-        }
+    function add(_comments){
+        comments = _comments;
     }
     function clear(){
         comments = [];
+        canvas.clearRect(0,0,canvas.canvas.width,canvas.canvas.height);
     }
-    function setFont(comObj){
-        canvas.font = comObj.size +"px"+" sans-serif";      
+    function remove(comment){
+        var p = comments.indexOf(comment);
+        if(p!= -1){
+            comments.splice(p,1);
+        }
     }
+    /*function setFont(comObj){
+        canvas.font ="bold " + comObj.size +"px"+" sans-serif";      
+    }*/
+    var setFont = function(){
+        var size;
+        return function(comObj){
+            if(size != comObj.size){
+                size = comObj.size;
+                canvas.font ="bold " + comObj.size +"px"+" sans-serif"; 
+            }
+        }
+    }();
     var setColor = function(comObj){
         var colorCache = {};
         return function(comObj){
             var color;
             
             if(colorCache[comObj.color]){
-                console.log(comObj);
                 color = colorCache[comObj.color];
             }
             else{
@@ -66,12 +72,9 @@ define(function(){
                 color = color.length >= 6 ? color : new Array(6 - color.length + 1).join("0") + color;
                 color = "#" + color;
                 colorCache[comObj.color] = color;
-                console.log("color"+color);
                 
             }
-            console.log(colorCache);
             canvas.fillStyle = color;
-            console.log(canvas.fillStyle);
         }
     }();
     function setAlpha(opacity){
@@ -81,18 +84,30 @@ define(function(){
         comments.forEach(function(comObj,index){
             setFont(comObj);
             setColor(comObj);
-            canvas.fillText(comObj.text,comObj.x,comObj.y+comObj.size/1.2);
+            var x = comObj.align_x;
+            if(x === "middle"){
+                x = canvas.canvas.width/2;
+                canvas.textAlign = "center";
+            }
+            else{
+                canvas.textAlign = "start"
+            }
+            canvas.fillText(comObj.text,x,comObj.align_y+comObj.height);
         });
     }
-    
+    function getWidth(comment){
+        if(!canvas){
+            canvas = document.createElement("canvas").getContext("2d");
+        }
+        setFont(comment);
+        return canvas.measureText(comment.text).width;
+    }
     return{
         bind:bind,
         add:add,
         draw:draw,
         setAlpha:setAlpha,
         clear:clear,
-        getWidth:function(text){
-            return canvas.measureText(text);
-        }
+        getWidth:getWidth
     }
 });
