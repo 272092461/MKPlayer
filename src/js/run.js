@@ -1,6 +1,6 @@
 define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","CommentBuilder","CommentManager"],function(MKCanvas,comment,loader,parser,builder,manager){
-    /*MKCanvas.bind(document.getElementsByClassName("MKP-canvas")[0]);                      //MKCanvas test
-    MKCanvas.add({
+    /*    MKCanvas.bind(document.getElementsByClassName("MKP-canvas")[0]);                      //MKCanvas test
+    MKCanvas.add([{
         text:"2333",
         x:"middle",
         y:1,
@@ -9,9 +9,7 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
         height:25,
         color:13311,
         size:25
-    })
-    
-    MKCanvas.add({
+    },{
         text:"陈333",
         x:30,
         y:30,
@@ -21,7 +19,8 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
         color:16777215,
         size:25
         
-    })
+    }])
+    
     
     MKCanvas.draw();
     MKCanvas.getWidth("2333");*/

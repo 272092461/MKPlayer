@@ -1,5 +1,5 @@
-define(["MKCanvas"],function(canvas){
-
+define(function(){
+    "use strict";
     function create(){
         var pools = [];
         var width;
@@ -54,7 +54,7 @@ define(["MKCanvas"],function(canvas){
             "use strict";
             var bottom = y+comment.height;
             var right = comment.right;
-            for(let i = 0;i < pool.length;i++){
+            for(var i = 0;i < pool.length;i++){
                 if(pool[i].y > y){
                     break;
                 } 
@@ -79,12 +79,12 @@ define(["MKCanvas"],function(canvas){
             return true;
         }
         function assign(comment){
-            "use strict";
+            
             if(comment.pindex === undefined){
                 comment.pindex = 0;
             }
             if(pools[comment.pindex] === undefined){
-                for(let i = 0;i <= comment.pindex;i++){
+                for(var i = 0;i <= comment.pindex;i++){
                     pools[i] = pools[i] === undefined ? []:pools[i];
                 }
             }
@@ -99,7 +99,7 @@ define(["MKCanvas"],function(canvas){
                     pool.push({height:0,bottom:0,x:0,y:0,right:0});
                     return 0;
                 }
-                for(let i = 0;i<pool.length;i++){
+                for(var i = 0;i<pool.length;i++){
                     y = pool[i].bottom + avoid;
                     if(y+comment.height < height){
                         if(pathCheck(y,comment,pool)){

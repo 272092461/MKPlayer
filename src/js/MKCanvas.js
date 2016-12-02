@@ -1,4 +1,5 @@
 define(function(){
+    "use strict";
     var canvas;
     var comments = [];
     var globalAlpha = 1;

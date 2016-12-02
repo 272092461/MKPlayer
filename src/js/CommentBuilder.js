@@ -1,4 +1,5 @@
 define(["MKCanvas"],function(canvas){
+    "use strict";
     var globalTTl = 6000;
     var width;
     var height;
