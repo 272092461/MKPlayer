@@ -4,16 +4,16 @@ define(["MKCanvas"],function(canvas){
     var width;
     var height;
     function init(obj){
-        if(obj["ttl"]){
+        if("ttl" in obj){
             setTTl(obj.ttl);
         }
-        if(obj["height"]){
+        if("height" in obj){
             setHeight(obj.height);
         }
-        if(obj["width"]){
+        if("width" in obj){
             setWidth(obj.width);
         }
-        
+
     }
     function setTTl(val){
         globalTTl = val;
@@ -74,7 +74,7 @@ define(["MKCanvas"],function(canvas){
                 else{
                     return height - this.bottom;
                 }
-            }, 
+            },
             configurable:true,
             enumerable:true
         },
@@ -107,7 +107,7 @@ define(["MKCanvas"],function(canvas){
                return this._endTime;
             },
             configurable:true,
-            enumerable:true 
+            enumerable:true
         }
     });
     CoreComment.prototype.time = function(val){
@@ -115,9 +115,9 @@ define(["MKCanvas"],function(canvas){
         if(this.ttl<0){
             this.onFinish(this);
         }
-    }
+    };
     CoreComment.prototype.onFinish = function(){
-        
+
     };
     function ScrollComment(obj){
         this.ttl = globalTTl;
@@ -167,15 +167,20 @@ define(["MKCanvas"],function(canvas){
     }
     function builder(obj){
         if(obj.mode == 1 || obj.mode == 2 || obj.mode == 6){
-            return new ScrollComment(obj);   
+            return new ScrollComment(obj);
         }
         else{
             return new CoreComment(obj);
         }
     }
+    function resize(_width,_height){
+        setWidth(_width);
+        setHeight(_height);
+    }
     return{
         builder:builder,
         setTTl:setTTl,
-        init:init           //@param {width:*,height:*,ttl:*}
+        init:init,           //@param {width:*,height:*,ttl:*}
+        resize:resize
     }
 });

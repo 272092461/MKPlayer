@@ -1,79 +1,59 @@
 define(["CommentManager"],function(manager){
-    var MKPlayer = document.getElementsByClassName("MKPlayer");
     var video;
-    if(MKPlayer.length == 0){
-        return;
-    }
-    build();
-    function build(){
-        MKPlayer = MKPlayer[0];
-        var videoUrl = MKPlayer.getAttribute("video-url");
-        var commentUrl = MKPlayer.getAttribute("comment-url");
-        var width = MKPlayer.getAttribute("width") | 800;
-        var height = MKPlayer.getAttribute("height") | 600;
-        
-        
-        MKPlayer.style.position = "relative";
-        
-        var fragment = document.createDocumentFragment();
-        
-        video = buildVideo(videoUrl,width,height);
-        video.autoplay = true;
-        var canvas = document.createElement("canvas");
-        canvas.style.position = "absolute";
-        canvas.style.top = 0;
-        canvas.style.left = 0;
-        
-        
-        fragment.appendChild(video);
-        fragment.appendChild(canvas);
-        
-        MKPlayer.appendChild(fragment);
-       /* video.onresize = function(){
-            canvas.width = video.offsetWidth;
-            canvas.height = video.offsetHeight;
-        }*/
-        canvas.width = video.offsetWidth;
-        canvas.height = video.offsetHeight;
-        
-        manager.addEventListener("load",function(){
-            manager.start(10);
+    var _listener = {};
+    function init(_video,_canvas,_url){
+        manager.init(_canvas,_url);
+        video = _video;
+        video.addEventListener("play",manager.start);
+        video.addEventListener("timeupdate",function(){
+            console.log(this.currentTime*1000 +"  "+manager.getTime());
         });
-        manager.init(canvas,commentUrl);
+        video.addEventListener("pause",manager.stop);
+        manager.addEventListener("load",function(){
+            dispatchEvent("load");
+        });
     }
-    console.log(video.offsetWidth);
-    function buildVideo(url,width,height){
-        url = url.split(";");
-        var video = document.createElement("video");
-        for(var i = 0; i < url.length;i++){
-            var source = document.createElement("source");
-            source.setAttribute("src",url[i]);
-            var type = url[i].split(".");
-            switch(type[type.length-1]){
-                case "mp4":{
-                    source.setAttribute("type","video/mp4");
-                    break;
-                }
-                case "webm":{
-                    source.setAttribute("type","video/webm");
-                    break;
-                }
-                case "ogg":{
-                    source.setAttribute("type","video/ogg");
-                    break;
-                }
+    function start(val){
+        video.play();
+        /*manager.start(val);*/
+    }
+    function stop(){
+        video.pause();
+        /*manager.stop();*/
+    }
+    function timeto(second){
+        video.currentTime = second;
+        manager.timeto(second * 1000);
+    }
+    function setVolume(val){
+        video.volume = val;
+    }
+    function dispatchEvent(name){
+        var calls = _listener[name];
+        if(calls != undefined){
+            for(var i = 0;i<calls.length;i++){
+                calls[i]();
             }
-            video.appendChild(source);
         }
+    }
+    function addEventListener(name,callback){
+        if(_listener[name] == undefined){
+            _listener[name] = [];
+        }
+        _listener[name].push(callback);
+    }
+    function resize(width,height){
         video.width = width;
         video.height = height;
-        return video;
+        manager.resize(width,height);
     }
-    /*manager.addEventListener("load",function(){
-        manager.start(10);
-    });
-    manager.init(document.getElementsByClassName("MKP-canvas")[0],"comment-otsukimi.xml");*/
     return{
-        
+        init:init,
+        start:start,
+        stop:stop,
+        timeto:timeto,
+        addEventListener:addEventListener,
+        resize:resize,
+        setVolume:setVolume
     }
 });

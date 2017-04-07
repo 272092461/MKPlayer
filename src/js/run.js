@@ -1,4 +1,4 @@
-define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","CommentBuilder","CommentManager"],function(MKCanvas,comment,loader,parser,builder,manager){
+define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","CommentBuilder","CommentManager","MKPlayer","MKPlayer-view","ControlBar"],function(MKCanvas,comment,loader,parser,builder,manager,player,view,bar){
     /*    MKCanvas.bind(document.getElementsByClassName("MKP-canvas")[0]);                      //MKCanvas test
     MKCanvas.add([{
         text:"2333",
@@ -68,6 +68,77 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
             console.log(runline[i].align_y + " " +runline[i].y);
         }
     });*/
-    manager.test(document.getElementsByClassName("MKP-canvas")[0],"comment-otsukimi.xml");
+    
+    var MKPlayer = document.getElementsByClassName("MKPlayer");
+    var video;
+    if(!MKPlayer.length){
+        return;
+    }
+    view.build(MKPlayer[0]);
+    /*function build(){
+        MKPlayer = MKPlayer[0];
+        var videoUrl = MKPlayer.getAttribute("video-url");
+        var commentUrl = MKPlayer.getAttribute("comment-url");
+        var width = MKPlayer.getAttribute("width") | 800;
+        var height = MKPlayer.getAttribute("height") | 600;
+        
+        
+        var fragment = document.createElement("div");
+        
+        video = buildVideo(videoUrl,width,height);
+        video.autoplay = true;
+        var canvas = document.createElement("canvas");
+        canvas.className="comment-canvas";
+        
+        
+        fragment.appendChild(video);
+        fragment.appendChild(canvas);
+        fragment.className = "player-body";
+        MKPlayer.appendChild(fragment);
+        video.onresize = function(){
+            canvas.width = video.offsetWidth;
+            canvas.height = video.offsetHeight;
+        }
+        canvas.width = video.offsetWidth;
+        canvas.height = video.offsetHeight;
+        manager.addEventListener("load",function(){
+            manager.start(10);
+            manager.timeto(10000);
+        });
+        manager.init(canvas,commentUrl);
+        player.addEventListener("load",function(){
+            player.start(10);
+            player.timeto(50);
+        });
+        player.init(video,canvas,commentUrl);
+    }
+    function buildVideo(url,width,height){
+        url = url.split(";");
+        var video = document.createElement("video");
+        for(var i = 0; i < url.length;i++){
+            var source = document.createElement("source");
+            source.setAttribute("src",url[i]);
+            var type = url[i].split(".");
+            switch(type[type.length-1]){
+                case "mp4":{
+                    source.setAttribute("type","video/mp4");
+                    break;
+                }
+                case "webm":{
+                    source.setAttribute("type","video/webm");
+                    break;
+                }
+                case "ogg":{
+                    source.setAttribute("type","video/ogg");
+                    break;
+                }
+            }
+            video.appendChild(source);
+        }
+        video.width = width;
+        video.height = height;
+        return video;
+    }*/
+    /*manager.test(document.getElementsByClassName("MKP-canvas")[0],"comment-otsukimi.xml");*/
     return{};
 });

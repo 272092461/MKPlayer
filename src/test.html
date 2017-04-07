@@ -1,11 +1,88 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <script src="js/require.js" data-main="js/main"></script>
-    </head>
-    <body style="background:black">
-        <div class="MKPlayer" video-url="otsukimi_recital.mp4" comment-url="comment-otsukimi.xml" width="800px">
-            
-        </div>
-    </body>
+
+<head>
+    <script src="js/require.js" data-main="js/main"></script>
+    <link rel="stylesheet" href="css/iconfont.css">
+    <style>
+        /*放入mkplayer.css*/
+
+        .setting-container {
+            position: relative;
+        }
+
+        .setting-wrap {
+            width: 250px;
+            height: 300px;
+            display: none;
+            position: absolute;
+            border-radius: 5px;
+            background-color: black;
+            opacity: 0.8;
+        }
+
+        .setting-container:hover .setting-wrap {
+            display: block;
+        }
+
+        .setting-content {
+            margin: 20px 25px;
+        }
+
+        .setting-row {
+            position: relative;
+            height: 30px;
+        }
+
+        .setting-icon {
+            display: inline-block;
+            color: white;
+            width: 30px;
+            margin-right: 10px;
+        }
+
+        .setting-line {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            height: 0;
+            border-bottom: 1px solid white;
+            width: 160px;
+        }
+        /*放入iconfont.css*/
+
+        .icon-voice {
+            line-height: 30px;
+        }
+
+        .icon-setting:after {
+            content: "\e7b5";
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <span class="setting-container">
+            <div class="setting-wrap">
+                <div class="setting-content">
+                    <div class="setting-row">
+                       <span class="iconfont icon-voice setting-icon">图</span>
+    <div class="setting-line"></div>
+    </div>
+    <div class="setting-row">
+        <span class="iconfont icon-voice"></span>
+        <div class="setting-line"></div>
+    </div>
+
+    <div class="setting-row">
+        <span class="iconfont icon-voice"></span>
+        <div class="setting-line"></div>
+    </div>
+    </div>
+    </div>
+    <span class="iconfont icon-setting"></span>
+    </span>
+</body>
+
 </html>

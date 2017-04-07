@@ -1,5 +1,4 @@
 define(function(){
-    "use strict";
     var canvas;
     var comments = [];
     var globalAlpha = 1;
@@ -23,7 +22,7 @@ define(function(){
         for(var name in def){
             temp[name] = comObj[name] == null ? def[name] : comObj[name];
         }
-        
+
         return temp;
     }
 /**
@@ -41,6 +40,7 @@ define(function(){
     function clear(){
         comments = [];
         canvas.clearRect(0,0,canvas.canvas.width,canvas.canvas.height);
+        setFont({size:null});
     }
     function remove(comment){
         var p = comments.indexOf(comment);
@@ -49,14 +49,14 @@ define(function(){
         }
     }
     /*function setFont(comObj){
-        canvas.font ="bold " + comObj.size +"px"+" sans-serif";      
+        canvas.font ="bold " + comObj.size +"px"+" sans-serif";
     }*/
     var setFont = function(){
         var size;
         return function(comObj){
             if(size != comObj.size){
                 size = comObj.size;
-                canvas.font ="bold " + comObj.size +"px"+" sans-serif"; 
+                canvas.font = size +"px"+" Microsoft YaHei"; 
             }
         }
     }();
@@ -64,7 +64,7 @@ define(function(){
         var colorCache = {};
         return function(comObj){
             var color;
-            
+
             if(colorCache[comObj.color]){
                 color = colorCache[comObj.color];
             }
@@ -73,7 +73,7 @@ define(function(){
                 color = color.length >= 6 ? color : new Array(6 - color.length + 1).join("0") + color;
                 color = "#" + color;
                 colorCache[comObj.color] = color;
-                
+
             }
             canvas.fillStyle = color;
         }
@@ -83,6 +83,7 @@ define(function(){
     }
     function draw(){
         comments.forEach(function(comObj,index){
+
             setFont(comObj);
             setColor(comObj);
             var x = comObj.align_x;

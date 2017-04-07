@@ -7,9 +7,13 @@ require.config({
        "CommentBuilder":"CommentBuilder",
        "CommentManager":"CommentManager",
        "MKPlayer":"MKPlayer",
+       "ControlBar":"ControlBar",
+       "MKPlayer-view":"MKPlayer-view",
+       "DataSender":"DataSender",
+       "MKSocket":"MKSocket",
        "run":"run"
-   } 
+   }
 });
-require(["MKPlayer"],function(){
-    
+require(["run"],function(run){
+
 });

@@ -6,10 +6,8 @@ define(function(){
         var height;
         var avoid = 1;
         function init(_width,_height,_canvas){
-//      canvas.bind(document.getElementsByClassName("MKP-canvas")[0]);
-        width = _width;
-        height = _height;
-//      canvas.bind(_canvas);
+            width = _width;
+            height = _height;
         }
         function add(comment){
             comment.y = assign(comment);
@@ -144,14 +142,20 @@ define(function(){
                 }
             }
         }
-        function render(){
-            console.log(pools);
+        function clear(){
+            pools = [];
+        }
+        function resize(_width,_height){
+            console.log("resize");
+            width = _width;
+            height = _height;
         }
         return {
             init:init,
             add:add,
+            resize:resize,
             remove:remove,
-            render:render
+            clear:clear
         }
     }
     return{
