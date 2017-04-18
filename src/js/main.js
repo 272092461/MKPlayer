@@ -10,6 +10,7 @@ require.config({
        "ControlBar":"ControlBar",
        "MKPlayer-view":"MKPlayer-view",
        "DataSender":"DataSender",
+       "CommentSender":"CommentSender",
        "MKSocket":"MKSocket",
        "run":"run"
    }

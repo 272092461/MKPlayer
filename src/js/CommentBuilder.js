@@ -182,5 +182,5 @@ define(["MKCanvas"],function(canvas){
         setTTl:setTTl,
         init:init,           //@param {width:*,height:*,ttl:*}
         resize:resize
-    }
+    };
 });

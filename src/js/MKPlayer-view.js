@@ -1,11 +1,13 @@
-define(["MKPlayer","ControlBar"],function(player,bar){
+define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
     var video;
     var control = {};
     var MKPlayer;
+    var textArea;
     function build(Player){
         MKPlayer = Player;
         var videoUrl = MKPlayer.getAttribute("video-url");
         var commentUrl = MKPlayer.getAttribute("comment-url");
+        var socket_url = MKPlayer.getAttribute("socket-url");
         var width = MKPlayer.getAttribute("width") | 800;
         var height = MKPlayer.getAttribute("height") | 600;
 
@@ -25,7 +27,7 @@ define(["MKPlayer","ControlBar"],function(player,bar){
         video.onresize = function(){
             canvas.width = video.offsetWidth;
             canvas.height = video.offsetHeight;
-        }
+        };
         canvas.width = video.offsetWidth;
         canvas.height = video.offsetHeight;
         /*manager.addEventListener("load",function(){
@@ -33,8 +35,10 @@ define(["MKPlayer","ControlBar"],function(player,bar){
             manager.timeto(10000);
         });
         manager.init(canvas,commentUrl);*/
-
-        player.init(video,canvas,commentUrl);
+        textArea = document.getElementById("comment-area");
+        control.sendBtn = document.getElementById("comment-sender");
+        player.init(video,canvas,commentUrl,socket_url);
+        sender.init();
         if(MKPlayer.getAttribute("autoplay")){
                 autoPlay();
         }
@@ -84,9 +88,9 @@ define(["MKPlayer","ControlBar"],function(player,bar){
 
         control.fullscreen = _("label","control-fullscreen iconfont icon-fullscreen btn-right");
         control.menu = _("label","control-play iconfont icon-menu btn-right");
-        control.menu.for = "comment-setting";
+        control.menu.setAttribute("for","comment-setting");
         var setting = _("div","setting-container");
-        setting.innerHTML = '<input type="checkbox" name="" id="comment-setting" class="check-hidden"><div class="setting-wrap"><div class="setting-content"><div class="setting-row"><span class="iconfont icon-voice icon-white"></span><span class="setting-line"></span></div><div class="setting-row"><span class="iconfont icon-voice icon-white"></span><span class="setting-line"></span></div><div class="setting-row"><span class="iconfont icon-voice icon-white"></span><span class="setting-line"></span></div><div class="comment-wrap"><textarea name="" id="" cols="30" class="comment-content"></textarea><span class="btn submit-btn">提交</span></div></div></div>';
+        setting.innerHTML = '<input type="checkbox" name="" id="comment-setting" class="check-hidden"><div class="setting-wrap"><div class="setting-content"><div class="setting-row"><span class="iconfont icon-voice icon-white"></span><span class="setting-line"></span></div><div class="setting-row"><span class="iconfont icon-voice icon-white"></span><span class="setting-line"></span></div><div class="setting-row"><span class="iconfont icon-voice icon-white"></span><span class="setting-line"></span></div><div class="comment-wrap"><textarea name="" id="comment-area" cols="30" class="comment-content"></textarea><span class="btn submit-btn" id="comment-sender">发送</span></div></div></div>';
         controls.appendChild(control.playButton);
         controls.appendChild(control.fullscreen);
         controls.appendChild(control.menu);
@@ -113,6 +117,9 @@ define(["MKPlayer","ControlBar"],function(player,bar){
         control.process.addEventListener("click",bar.movePlayTime);
         control.fullscreen.addEventListener("click",bar.changeFullscreen);
         control.playButton.addEventListener("click",bar.changePlayStatus);
+        control.sendBtn.addEventListener("click",function(){
+          sender.send(textArea.value,player.getMillTime());
+        });
         document.addEventListener("keyup",function(e){
             if(e.keyCode == 27){
                 bar.changeFullscreen(0);
@@ -170,6 +177,17 @@ define(["MKPlayer","ControlBar"],function(player,bar){
             console.error("requset fullscreen failed");
         }
     }
+    function setSubmit(isSubmit){
+      var classList = control.sendBtn.classList;
+      if(isSubmit){
+        classList.remove("disable-btn");
+        classList.add("submit-btn");
+      }
+      else{
+        classList.remove("submit-btn");
+        classList.add("disable-btn");
+      }
+    }
     function exitFullscreen(docElm){
         if (docElm.exitFullscreen) {
             docElm.exitFullscreen();
@@ -210,6 +228,7 @@ define(["MKPlayer","ControlBar"],function(player,bar){
         turnFullscreen:turnFullscreen,
         turnWindow:turnWindow,
         play:play,
-        stop:stop
+        stop:stop,
+        setSubmit:setSubmit
     };
 });

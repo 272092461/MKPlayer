@@ -39,7 +39,7 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
         csa.top = comment.create();
         csa.reserve = comment.create();
         csa.init(canvas.width,canvas.height);
-        socket.init(socket_url,receiveComment);
+        socket.init(socket_url,receiveCommentXML);
         loader.load(_url,function(xml){
             timeline = parser.create(xml);
             dispatchEvent("load");
@@ -134,7 +134,6 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
     //     timer=null;
     // }
     function stop(){
-        console.log(timer);
         cancelAnimationFrame(timer);
         timer=null;
     }
@@ -239,7 +238,13 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
         }
         _listener[name].push(callback);
     }
-    function receiveComment(xml){
+    function receiveComment(comment){
+        var index = parser.add(comment);
+        if(index<=position){
+          //position++;
+        }
+    }
+    function receiveCommentXML(xml){
         parser.addXML(xml);
     }
     function binSearch(time,arr){
@@ -284,6 +289,6 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
         resize:resize,
         getTime:getTime,
         test:test,
-        send:send
+        receiveComment:receiveComment
     };
 });

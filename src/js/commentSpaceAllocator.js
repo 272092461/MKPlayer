@@ -33,7 +33,7 @@ define(function(){
                     if(pool[position-1].bottom<=comment.bottom && pool[position].bottom>=comment.bottom){
                         find = true;
                         pool.splice(position,0,comment);
-                    
+
                     }
                     else if(pool[position].bottom>comment.bottom){
                         stop = position;
@@ -53,10 +53,10 @@ define(function(){
             var bottom = y+comment.height;
             var right = comment.right;
             for(var i = 0;i < pool.length;i++){
-                if(pool[i].y > y){
+                if(pool[i].y > bottom){
                     break;
-                } 
-                if(pool[i].bottom < y || pool[i].y > bottom){
+                }
+                if(pool[i].bottom < y){
                     continue;
                 }
                 else{
@@ -77,7 +77,7 @@ define(function(){
             return true;
         }
         function assign(comment){
-            
+
             if(comment.pindex === undefined){
                 comment.pindex = 0;
             }
@@ -136,9 +136,9 @@ define(function(){
         function remove(comment){
             var pool = pools[comment.pindex];
             if(pool){
-                var index = pool.indexOf(comment) 
+                var index = pool.indexOf(comment)
                 if(index != -1){
-                    pool.splice(index,1); 
+                    pool.splice(index,1);
                 }
             }
         }

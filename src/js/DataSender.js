@@ -11,10 +11,10 @@ define(["MKSocket","CommentManager"],function(socket,manager){
     function transfer(comment){
         var data;
         /* -----------xml转换-----------*/
-        
+
         return data;
     }
     return{
         send:send
-    }
+    };
 });

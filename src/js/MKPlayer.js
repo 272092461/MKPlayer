@@ -1,8 +1,8 @@
 define(["CommentManager"],function(manager){
     var video;
     var _listener = {};
-    function init(_video,_canvas,_url){
-        manager.init(_canvas,_url);
+    function init(_video,_canvas,_url,socket_url){
+        manager.init(_canvas,_url,socket_url);
         video = _video;
         video.addEventListener("play",manager.start);
         video.addEventListener("timeupdate",function(){
@@ -20,6 +20,9 @@ define(["CommentManager"],function(manager){
     function stop(){
         video.pause();
         /*manager.stop();*/
+    }
+    function getMillTime(){
+      return manager.getTime();
     }
     function timeto(second){
         video.currentTime = second;
@@ -47,6 +50,9 @@ define(["CommentManager"],function(manager){
         video.height = height;
         manager.resize(width,height);
     }
+    function send(){
+      manager.send({});
+    }
     return{
         init:init,
         start:start,
@@ -54,6 +60,8 @@ define(["CommentManager"],function(manager){
         timeto:timeto,
         addEventListener:addEventListener,
         resize:resize,
-        setVolume:setVolume
-    }
+        getMillTime:getMillTime,
+        setVolume:setVolume,
+        send:send
+    };
 });
