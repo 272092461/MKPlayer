@@ -96,8 +96,6 @@ define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
         controls.appendChild(control.menu);
         controls.appendChild(control.process);
         controls.appendChild(setting);
-
-
         return controls;
     }
     function autoPlay(){

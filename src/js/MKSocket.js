@@ -1,4 +1,4 @@
-define(function(){
+define(["socketIO"],function(io){
     var url;
     var socket;
     function init(_url,callback,error){
@@ -6,7 +6,7 @@ define(function(){
             console.error("你的浏览器不支持WebSocket");
             return;
         }
-        _url = "ws://127.0.0.1:8080/server/socket";
+        _url = "ws://127.0.0.1:8080/comment-otsukimi.xml";
         if(_url === undefined){
           return;
         }
@@ -18,19 +18,19 @@ define(function(){
         }
 
         url = _url;
-        socket = new WebSocket(url);
-        socket.addEventListener('open',function(){
+        socket = io.connect(url);
+        socket.on('connect',function(){
           console.log("socket connect succeed");
-          this.addEventListener("message",function(evt){
-            callback(evt.data);
+          this.on("message",function(evt){
+            console.log(evt);
+            callback(evt);
           });
-          socket.send("connect succeed");
         });
         // socket.onmessage = function(evt){
         //     callback(evt.data);                             //收到弹幕将数据交给回调函数
         // };
-        socket.addEventListener("error",function(){
-            console.log("socket connect error");
+        socket.on("error",function(e){
+            console.error(e);
             error();
         });
     }
@@ -38,7 +38,7 @@ define(function(){
         if(socket === undefined){
             return;
         }
-        socket.send(data);
+        socket.emit("message",data);
     }
     return {
         init:init,

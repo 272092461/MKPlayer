@@ -1,4 +1,4 @@
-define(["CommentManager","require"],function(manager,require){
+define(["CommentManager","require","DataSender"],function(manager,require,datasender){
   var param = {};
   var sendable = true;
   var comment;
@@ -11,10 +11,10 @@ define(["CommentManager","require"],function(manager,require){
     param.mode = "mode" in setting ? setting.mode : 1;
     param.dbid = "dbid" in setting ? setting.dbid : 0;
     param.hash = "hash" in setting ? setting.hash :"45883172";
-    param.pool = 1;
+    param.pool = 0;
   }
   function getDate(){
-    return parseInt(new Date().getTime/1000);
+    return parseInt(new Date().getTime()/1000);
   }
   function send(text,stime){
     comment = Object.create(param);
@@ -30,10 +30,12 @@ define(["CommentManager","require"],function(manager,require){
     }
     comment. text = text;
     //param.date = getDate();
-    comment.stime = stime+20;
+    comment.date = getDate();
+    comment.stime = stime+20;           //跳过当前帧
     changeSendable();
     requestAnimationFrame(changeSendable);
     manager.receiveComment(comment);
+    datasender.send(comment);
   }
   function changeSendable(){
     sendable = !sendable;

@@ -12,6 +12,7 @@ require.config({
        "DataSender":"DataSender",
        "CommentSender":"CommentSender",
        "MKSocket":"MKSocket",
+       "socketIO":"http://localhost:8080/socket.io/socket.io.js",
        "run":"run"
    }
 });
