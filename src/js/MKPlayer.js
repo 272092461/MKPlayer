@@ -2,11 +2,14 @@ define(["CommentManager"],function(manager){
     var video;
     var _listener = {};
     function init(_video,_canvas,_url,socket_url){
-        manager.init(_canvas,_url,socket_url);
         video = _video;
+        manager.init(_canvas,_url,socket_url,video);
         video.addEventListener("play",manager.start);
-        video.addEventListener("timeupdate",function(){
-            console.log(this.currentTime*1000 +"  "+manager.getTime());
+        // video.addEventListener("timeupdate",function(){
+        //     console.log(this.currentTime*1000 +"  "+manager.getTime());
+        // });
+        video.addEventListener("ended",function(){
+          manager.reset();
         });
         video.addEventListener("pause",manager.stop);
         manager.addEventListener("load",function(){
@@ -33,7 +36,7 @@ define(["CommentManager"],function(manager){
     }
     function dispatchEvent(name){
         var calls = _listener[name];
-        if(calls != undefined){
+        if(calls !== undefined){
             for(var i = 0;i<calls.length;i++){
                 calls[i]();
             }
@@ -47,11 +50,15 @@ define(["CommentManager"],function(manager){
     }
     function resize(width,height){
         video.width = width;
-        video.height = height;
+        if(height !== undefined){
+          video.height = height;
+        }
+        else{
+            video.removeAttribute("height");
+            manager.resize(width,video.offsetHeight);
+            return;
+        }
         manager.resize(width,height);
-    }
-    function send(){
-      manager.send({});
     }
     return{
         init:init,
@@ -61,7 +68,6 @@ define(["CommentManager"],function(manager){
         addEventListener:addEventListener,
         resize:resize,
         getMillTime:getMillTime,
-        setVolume:setVolume,
-        send:send
+        setVolume:setVolume
     };
 });

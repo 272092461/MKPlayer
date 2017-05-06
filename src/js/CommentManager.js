@@ -2,6 +2,7 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
     var canvas;
     var _listener = {};
     var timeline;
+    var video;
     var runline = [];
     var timer;
     var width;
@@ -24,7 +25,7 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
             }
         }
     };
-    function init(_canvas,_url,socket_url){
+    function init(_canvas,_url,socket_url,_video){
         canvas = _canvas;
         canvas.width = 800;
         canvas.height = 600;
@@ -40,6 +41,7 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
         csa.reserve = comment.create();
         csa.init(canvas.width,canvas.height);
         socket.init(socket_url,receiveCommentXML);
+        video = _video;
         loader.load(_url,function(xml){
             timeline = parser.create(xml);
             dispatchEvent("load");
@@ -47,10 +49,9 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
         initAnimationFrame();
     }
     function test(_canvas,_url){
-        console.log("testing---");
         canvas = _canvas;
-        canvas.width = 800;
-        canvas.height = 600;
+        // canvas.width = 800;
+        // canvas.height = 600;
         MKCanvas.bind(_canvas);
         builder.init({
             width:canvas.width,
@@ -80,6 +81,10 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
     var times = 0;
     function start(){
         requestDraw(function(innerTime){
+          if(innerTime>1000 || innerTime<0){
+            timeto(video.currentTime*1000);
+            return;
+          }
           move(innerTime);
           run(innerTime);
           time+=innerTime;
@@ -87,16 +92,16 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
         });
     }
     function requestDraw(callback){
-      var date = new Date();
+      var date = video.currentTime*1000;
       var innerTime;
       return requestAnimationFrame(function(excTime){
-        var lastdate = new Date();
+        var lastdate = video.currentTime*1000;
         innerTime = lastdate - date;
         draw();
         callback(innerTime);
       });
     }
-    function initAnimationFrame() {
+    function initAnimationFrame() {                         //为requestAnimationFrame提供兼容性方案
         var vendors = ['webkit', 'moz'];
 
         for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
@@ -107,7 +112,8 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
 
         if (!window.requestAnimationFrame) {
             window.requestAnimationFrame = function(callback, element) {
-                var currTime = new Date().getTime();
+                var lastTime = 0;
+                var currTime = video.currentTime*1000;
                 var timeToCall = Math.max(0, 16.7 - (currTime - lastTime));
                 var id = window.setTimeout(function() {
                     callback(currTime + timeToCall);
@@ -147,6 +153,8 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
         csa.bottom.clear();
         csa.top.clear();
         csa.reserve.clear();
+        stop();
+        start();
     }
     function move(time){
         for(var i = 0;i<runline.length;i++){
@@ -221,8 +229,8 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
         height = _height;
         canvas.width = _width;
         canvas.height= _height;
-        csa.resize(_width,_height);
-        builder.resize(_width,_height);
+        csa.resize(_width,_height-10);
+        builder.resize(_width,_height-10);
     }
     function dispatchEvent(name){
         var calls = _listener[name];
@@ -244,9 +252,40 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
           //position++;
         }
     }
-    function receiveCommentXML(xml){
-        parser.addXML(xml);
+    function receiveCommentXML(data){
+        var cjson = JSON.parse(data);
+        var obj = {};
+        var xml = createXML(cjson.data);
+        var d = xml.getElementsByTagName('d')[0];
+        var opt = d.getAttribute("p").split(",");
+        var stime = Math.round(opt[0] * 1000);
+        if(stime<time){                                  //在当前帧之前 移动播放轴
+          position++;
+        }
+        else if(stime<time+20){                           //在当前帧中 移动至下一帧
+          stime = stime+20;
+        }
+        obj.stime = stime;
+        obj.mode = parseInt(opt[1]);
+        obj.size = parseInt(opt[2]);
+        obj.color = parseInt(opt[3]);
+        obj.date = parseInt(opt[4]);
+        obj.pool = parseInt(opt[5]);
+        if (opt[7] != null)
+            obj.dbid = parseInt(opt[7]);
+        obj.hash = opt[6];
+        obj.text = d.childNodes[0].nodeValue.replace(/(\/n|\\n|\n|\r\n)/g, "\n");
+        parser.add(obj);
     }
+    function createXML(str){
+  　　if(document.all){
+    　　var xmlDom=new ActiveXObject("Microsoft.XMLDOM");
+    　　xmlDom.loadXML(str);
+    　　return xmlDom;
+  　　}
+  　　else
+    　　return new DOMParser().parseFromString(str, "text/xml");
+　　}
     function binSearch(time,arr){
         if(arr.length == 0){
             return 0;
@@ -280,6 +319,17 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
     function getTime(){
         return time;
     }
+    function reset(){
+      time = 0;
+      position = 0;
+      runline=[];
+      MKCanvas.clear();
+      csa.scroll.clear();
+      csa.scrollbtm.clear();
+      csa.bottom.clear();
+      csa.top.clear();
+      csa.reserve.clear();
+    }
     return{
         init:init,
         start:start,
@@ -289,6 +339,7 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
         resize:resize,
         getTime:getTime,
         test:test,
-        receiveComment:receiveComment
+        receiveComment:receiveComment,
+        reset:reset
     };
 });

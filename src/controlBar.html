@@ -10,17 +10,21 @@
             bottom: 0;
             width: 100%;
             background-color: black;
-            opacity: 0.5;
+            opacity: 0;
+            transition: all .5s;
             /**/
             height: 50px;
             color: white;
             line-height: 50px;
             z-index: 233;
         }
+        .play-controls:hover,.play-controls.active{
+            opacity:0.8;
+        }
 
         .control-play {
             height: inherit;
-            margin: 0 10px;
+            padding: 0 10px;
         }
 
         .btn-left {
@@ -77,8 +81,8 @@
 
         .setting-container {
             position: absolute;
-            top: -320px;
-            right: 270px;
+            top: -300px;
+            right: 250px;
         }
 
         .setting-wrap {
@@ -86,13 +90,17 @@
             height: 300px;
             display: none;
             position: absolute;
-            border-radius: 5px;
+            /*border-radius: 5px;*/
             background-color: black;
             opacity: 0.8;
         }
 
-        .check-hidden:checked~.setting-wrap {
+        .check-hidden:checked~.setting-container .setting-wrap {
             display: block;
+        }
+        .check-hidden:checked~.icon-menu{
+          background: white;
+          color:black;
         }
 
         .setting-content {
@@ -103,6 +111,9 @@
         .setting-row {
             position: relative;
             height: 30px;
+            text-align: justify;
+            text-align-last: justify;
+            line-height:30px;
         }
 
         .setting-row .iconfont {
@@ -170,6 +181,16 @@
         .check-hidden {
             display: none;
         }
+        .radio{
+          display:inline-block;
+          font-size:12px;
+        }
+        .radio label{
+          cursor: pointer;
+        }
+        .radio input{
+          vertical-align: sub;
+        }
     </style>
 </head>
 
@@ -177,6 +198,7 @@
     <div class="play-controls">
         <label class="control-play iconfont icon-play btn-left"></label>
         <label class="control-fullscreen iconfont icon-fullscreen btn-right"></label>
+        <input type="checkbox" name="" id="comment-setting" class="check-hidden">
         <label class="control-play iconfont icon-menu btn-right" for="comment-setting">
         </label>
         <div class="control-processbar">
@@ -185,21 +207,27 @@
             <div class="process-play"></div>
         </div>
         <div class="setting-container">
-            <input type="checkbox" name="" id="comment-setting" class="check-hidden">
             <div class="setting-wrap">
                 <div class="setting-content">
                     <div class="setting-row">
-                        <span class="iconfont icon-voice icon-white"></span>
-                        <span class="setting-line"></span>
+                        <div class="radio">
+                            <input type="radio" name="comment-mode" id="comment-scroll" value="1" checked="true">
+                            <label for="comment-scroll">滚动弹幕</label>
+                        </div>
+                        <div class="radio">
+                            <input type="radio" name="comment-mode" id="comment-bottom" value="4">
+                            <label for="comment-bottom">底端弹幕</label>
+                        </div>
                     </div>
                     <div class="setting-row">
-                        <span class="iconfont icon-voice icon-white"></span>
-                        <span class="setting-line"></span>
-                    </div>
-
-                    <div class="setting-row">
-                        <span class="iconfont icon-voice icon-white"></span>
-                        <span class="setting-line"></span>
+                      <div class="radio">
+                          <input type="radio" name="comment-mode" id="comment-top" value="5">
+                          <label for="comment-top">顶端弹幕</label>
+                      </div>
+                      <div class="radio">
+                          <input type="radio" name="comment-mode" id="comment-reserve" value="6">
+                          <label for="comment-reserve">逆向弹幕</label>
+                      </div>
                     </div>
                     <div class="comment-wrap">
                         <textarea name="" id="" cols="30" class="comment-content"></textarea>
@@ -209,7 +237,19 @@
             </div>
         </div>
     </div>
-
+    <script>
+        var timer;
+        document.body.addEventListener('touch',function(){
+          var dom = document.getElementsByClassName('play-controls')[0];
+          dom.classList.add('active');
+          if(timer != undefined){
+            clearInterval(timer);
+          }
+          timer = setInterval(function(){
+            dom.classList.remove('active');
+          },3000);
+        })
+    </script>
 
 </body>
 

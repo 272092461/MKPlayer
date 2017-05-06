@@ -6,7 +6,7 @@ define(["socketIO"],function(io){
             console.error("你的浏览器不支持WebSocket");
             return;
         }
-        _url = "ws://127.0.0.1:8080/comment-otsukimi.xml";
+        //_url = "ws://127.0.0.1:8080/comment-otsukimi.xml";
         if(_url === undefined){
           return;
         }
@@ -20,11 +20,13 @@ define(["socketIO"],function(io){
         url = _url;
         socket = io.connect(url);
         socket.on('connect',function(){
-          console.log("socket connect succeed");
           this.on("message",function(evt){
             console.log(evt);
             callback(evt);
           });
+        });
+        window.addEventListener('beforeunload',function(){
+          socket.emit('disconnect',true);
         });
         // socket.onmessage = function(evt){
         //     callback(evt.data);                             //收到弹幕将数据交给回调函数

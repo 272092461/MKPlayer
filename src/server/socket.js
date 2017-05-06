@@ -1,3 +1,4 @@
+var writter = require('./commentWriter')('./');
 function commentSocket(port){
   //var HOST = '10.105.219.159';
   var app = require('express')();
@@ -21,15 +22,26 @@ function commentSocket(port){
   	});
   });
   function newNsp(nsp){
+    var room = {
+      nsp:nsp,
+      count:0
+    };
     io.of(nsp).on('connection',function(socket){
-      console.log("a user connected "+nsp+" namespace");
+      room.count++;
+      console.log(room.count + " user connected "+nsp+" namespace");
+
       socket.on('message', function(obj){
     		//向其他客户端广播发布的消息
     		this.broadcast.emit('message', obj);
-        var jobj = JSON.parse(obj);
-    		console.log("receive on nsp" + jobj.data);
+        var msg = JSON.parse(obj);
+        writter.write(msg.data,nsp,room);
     	});
+      socket.on('disconnect',function(){
+        room.count--;
+        console.log('disconnect');
+      });
     });
+
   }
   http.listen(port, function(){
   	console.log('listening on *:8080');

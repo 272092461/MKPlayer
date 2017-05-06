@@ -2,6 +2,7 @@ define(["CommentManager","require","DataSender"],function(manager,require,datase
   var param = {};
   var sendable = true;
   var comment;
+  var radios = document.getElementsByName("comment-mode");
   function init(setting){
     if(setting === undefined){
       setting = {};
@@ -28,7 +29,11 @@ define(["CommentManager","require","DataSender"],function(manager,require,datase
     if(text.split(" ").join("") === ""){
       return false;
     }
-    comment. text = text;
+    var mode = getMode();
+    if(mode){
+      comment.mode = mode;
+    }
+    comment. text = text.replace(/\r|\n/g,"");
     //param.date = getDate();
     comment.date = getDate();
     comment.stime = stime+20;           //跳过当前帧
@@ -50,6 +55,13 @@ define(["CommentManager","require","DataSender"],function(manager,require,datase
   }
   function setMode(){
 
+  }
+  function getMode(){
+    for(var i = 0;i<radios.length;i++){
+      if(radios[i].checked){
+        return parseInt(radios[i].value);
+      }
+    }
   }
   return{
     init:init,

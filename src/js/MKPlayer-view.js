@@ -8,13 +8,13 @@ define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
         var videoUrl = MKPlayer.getAttribute("video-url");
         var commentUrl = MKPlayer.getAttribute("comment-url");
         var socket_url = MKPlayer.getAttribute("socket-url");
-        var width = MKPlayer.getAttribute("width") | 800;
-        var height = MKPlayer.getAttribute("height") | 600;
+        var width = parseInt(MKPlayer.getAttribute("width")) || 800;
+
 
 
         var fragment = _("div","player-body");
 
-        video = buildVideo(videoUrl,width,height);
+        video = buildVideo(videoUrl,width);
 
         var canvas = _("canvas","comment-canvas");
         var controls = buildControls();
@@ -24,12 +24,13 @@ define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
         fragment.appendChild(canvas);
         fragment.appendChild(controls);
         MKPlayer.appendChild(fragment);
-        video.onresize = function(){
-            canvas.width = video.offsetWidth;
-            canvas.height = video.offsetHeight;
-        };
-        canvas.width = video.offsetWidth;
-        canvas.height = video.offsetHeight;
+        // var height = video.offsetHeight;
+        // video.onresize = function(){
+        //     canvas.width = video.offsetWidth;
+        //     canvas.height = video.offsetHeight;
+        // };
+        // canvas.width = video.offsetWidth;
+        // canvas.height = video.offsetHeight;
         /*manager.addEventListener("load",function(){
             manager.start(10);
             manager.timeto(10000);
@@ -43,6 +44,9 @@ define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
                 autoPlay();
         }
         initListener();
+        video.addEventListener('canplay',function(){
+          player.resize(video.offsetWidth);
+        });
 
     }
     function buildVideo(url,width,height){
@@ -70,7 +74,7 @@ define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
             video.appendChild(source);
         }
         video.width = width;
-        video.height = height;
+        // video.height = height;
         return video;
     }
     function buildControls(){
@@ -90,9 +94,34 @@ define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
         control.menu = _("label","control-play iconfont icon-menu btn-right");
         control.menu.setAttribute("for","comment-setting");
         var setting = _("div","setting-container");
-        setting.innerHTML = '<input type="checkbox" name="" id="comment-setting" class="check-hidden"><div class="setting-wrap"><div class="setting-content"><div class="setting-row"><span class="iconfont icon-voice icon-white"></span><span class="setting-line"></span></div><div class="setting-row"><span class="iconfont icon-voice icon-white"></span><span class="setting-line"></span></div><div class="setting-row"><span class="iconfont icon-voice icon-white"></span><span class="setting-line"></span></div><div class="comment-wrap"><textarea name="" id="comment-area" cols="30" class="comment-content"></textarea><span class="btn submit-btn" id="comment-sender">发送</span></div></div></div>';
+        setting.innerHTML = '<div class="setting-wrap"><div class="setting-content">'+
+        '<div class="setting-row">'+
+            '<div class="radio">'+
+                '<input type="radio" name="comment-mode" id="comment-scroll" value="1" checked="true">'+
+                '<label for="comment-scroll">滚动弹幕</label>'+
+            '</div> '+
+            '<div class="radio">'+
+                '<input type="radio" name="comment-mode" id="comment-bottom" value="4">'+
+                '<label for="comment-bottom">底端弹幕</label>'+
+            '</div>'+
+        '</div>'+
+        '<div class="setting-row">'+
+          '<div class="radio">'+
+              '<input type="radio" name="comment-mode" id="comment-top" value="5">'+
+              '<label for="comment-top">顶端弹幕</label>'+
+          '</div> '+
+          '<div class="radio">'+
+              '<input type="radio" name="comment-mode" id="comment-reserve" value="6">'+
+              '<label for="comment-reserve">逆向弹幕</label>'+
+          '</div></div>'+'<div class="comment-wrap">'+
+          '<textarea name="" id="comment-area" cols="30" class="comment-content"></textarea><span class="btn submit-btn" id="comment-sender">发送</span></div></div></div>';
+        // <div class="setting-row"><span class="iconfont icon-voice icon-white"></span><span class="setting-line"></span></div><div class="setting-row"><span class="iconfont icon-voice icon-white"></span><span class="setting-line"></span></div><div class="setting-row"><span class="iconfont icon-voice icon-white"></span>
+        var check = _('input','check-hidden','comment-setting');
+        check.setAttribute('type','checkbox');
         controls.appendChild(control.playButton);
         controls.appendChild(control.fullscreen);
+
+        controls.appendChild(check);
         controls.appendChild(control.menu);
         controls.appendChild(control.process);
         controls.appendChild(setting);
@@ -111,6 +140,7 @@ define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
         });
         video.addEventListener("progress",bar.changeLoadTime);
         video.addEventListener("timeupdate",bar.changePlayTime);
+        video.addEventListener("ended",bar.changePlayStatus);
         control.process.addEventListener("touch",bar.movePlayTime);
         control.process.addEventListener("click",bar.movePlayTime);
         control.fullscreen.addEventListener("click",bar.changeFullscreen);
@@ -118,15 +148,27 @@ define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
         control.sendBtn.addEventListener("click",function(){
           sender.send(textArea.value,player.getMillTime());
         });
+        var timer;
+        MKPlayer.addEventListener('click',function(){
+          var dom = MKPlayer.getElementsByClassName('play-controls')[0];
+          dom.classList.add('active');
+          if(timer !== undefined){
+            clearInterval(timer);
+          }
+          timer = setInterval(function(){
+            dom.classList.remove('active');
+          },3000);
+        });
         document.addEventListener("keyup",function(e){
             if(e.keyCode == 27){
                 bar.changeFullscreen(0);
             }
         });
     }
-    function _(type,className){
+    function _(type,className,id){
         var ele = document.createElement(type);
         ele.className = className;
+        ele.setAttribute('id',id);
         return ele;
     }
     function setLoadLine(widthStyle){
@@ -146,14 +188,14 @@ define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
         var availWidth;
         var availHeight;
         var flag = true;
-        if(window.screen.availHeight<window.screen.availWidth){
-            availHeight = window.screen.availHeight;
-            availWidth = window.screen.availWidth;
+        if(window.screen.height<window.screen.width){
+            availHeight = window.screen.height;
+            availWidth = window.screen.width;
         }
         else{
             flag = false;
-            availWidth = window.screen.availHeight;
-            availHeight = window.screen.availWidth;
+            availWidth = window.screen.height;
+            availHeight = window.screen.width;
         }
         player.resize(availWidth,availHeight);
         return flag;
@@ -168,9 +210,9 @@ define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
         else if (docElm.webkitRequestFullScreen) {
             docElm.webkitRequestFullScreen();
         }
-        else if (elem.msRequestFullscreen) {
-            elem.msRequestFullscreen();
-        }
+        else if (docElm.msRequestFullscreen) {
+            docElm.msRequestFullscreen();
+        } 
         else{
             console.error("requset fullscreen failed");
         }
@@ -199,6 +241,9 @@ define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
         else if (docElm.msExitFullscreen) {
             docElm.msExitFullscreen();
         }
+        else if(document.msExitFullscreen){
+          document.msExitFullscreen()
+        }
         else if(document.webkitExitFullscreen) {
             document.webkitExitFullscreen();
         }
@@ -209,8 +254,9 @@ define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
     function turnWindow(){
         exitFullscreen(MKPlayer);
         MKPlayer.style.transform = "";
+        var width = parseInt(MKPlayer.getAttribute("width")) || 800;
         /*player.resize(MKPlayer.getAttribute("width"),MKPlayer.getAttribute("height"));*/
-        player.resize(800,600);
+        player.resize(width);
         console.log("turnWindow");
     }
     function play(){

@@ -11,20 +11,20 @@ define(function(){
             console.error("canvas binding error");
         }
     }
-    function setDefault(comObj,def){
-        var temp = {};
-        if(comObj["text"]){
-            temp["text"] = comObj["text"];
-        }
-        else{
-            return;
-        }
-        for(var name in def){
-            temp[name] = comObj[name] == null ? def[name] : comObj[name];
-        }
-
-        return temp;
-    }
+    // function setDefault(comObj,def){
+    //     var temp = {};
+    //     if(comObj["text"]){
+    //         temp["text"] = comObj["text"];
+    //     }
+    //     else{
+    //         return;
+    //     }
+    //     for(var name in def){
+    //         temp[name] = comObj[name] == null ? def[name] : comObj[name];
+    //     }
+    //
+    //     return temp;
+    // }
 /**
  * comObj
  * @property text 文本
@@ -56,15 +56,14 @@ define(function(){
         return function(comObj){
             if(size != comObj.size){
                 size = comObj.size;
-                canvas.font = size +"px"+" Microsoft YaHei"; 
+                canvas.font = size +"px"+" Microsoft YaHei";
             }
-        }
+        };
     }();
     var setColor = function(comObj){
         var colorCache = {};
         return function(comObj){
             var color;
-
             if(colorCache[comObj.color]){
                 color = colorCache[comObj.color];
             }
@@ -76,25 +75,38 @@ define(function(){
 
             }
             canvas.fillStyle = color;
-        }
+        };
     }();
     function setAlpha(opacity){
         canvas.globalAlpha = opacity;
     }
     function draw(){
+        var staticComment = [];
+        canvas.textAlign = "start";
         comments.forEach(function(comObj,index){
-
-            setFont(comObj);
-            setColor(comObj);
             var x = comObj.align_x;
             if(x === "middle"){
-                x = canvas.canvas.width/2;
-                canvas.textAlign = "center";
+                x = canvas.canvas.width/2;                //顶端弹幕与底端弹幕层级较高
+                staticComment.push({
+                  x:x,
+                  comObj:comObj
+                });
+                // canvas.textAlign = "center";
             }
+            // else{
+            //     canvas.textAlign = "start";
+            // }
             else{
-                canvas.textAlign = "start"
+              setFont(comObj);
+              setColor(comObj);
+              canvas.fillText(comObj.text,x,comObj.align_y+comObj.height);
             }
-            canvas.fillText(comObj.text,x,comObj.align_y+comObj.height);
+        });
+        canvas.textAlign = "center";
+        staticComment.forEach(function(item,index){
+            setFont(item.comObj);
+            setColor(item.comObj);
+            canvas.fillText(item.comObj.text,item.x,item.comObj.align_y+item.comObj.height);
         });
     }
     function getWidth(comment){
@@ -111,5 +123,5 @@ define(function(){
         setAlpha:setAlpha,
         clear:clear,
         getWidth:getWidth
-    }
+    };
 });

@@ -12,7 +12,7 @@ define(["MKSocket","CommentManager"],function(socket,manager){
         var data;
         /* -----------xml转换-----------*/
         id = id | uid;
-        data = '<d p="'+comment.stime+","+comment.mode+","+comment.size+","+comment.color+
+        data = '<d p="'+comment.stime/1000+","+comment.mode+","+comment.size+","+comment.color+
         ","+comment.date+","+comment.pool+","+id+","+ '249678149">'+comment.text+
         '</d>';
         return data;

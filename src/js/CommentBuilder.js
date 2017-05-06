@@ -33,7 +33,7 @@ define(["MKCanvas"],function(canvas){
     Object.defineProperties(CoreComment.prototype,{
        height:{
            get:function(){
-               if(this._height == undefined){
+               if(this._height === undefined){
                    this._height = this.size;
                }
                return this._height;

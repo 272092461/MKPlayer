@@ -146,7 +146,6 @@ define(function(){
             pools = [];
         }
         function resize(_width,_height){
-            console.log("resize");
             width = _width;
             height = _height;
         }

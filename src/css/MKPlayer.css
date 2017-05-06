@@ -1,3 +1,6 @@
+body{
+  margin-left: 0;
+}
 .MKPlayer{
     font-size:0;
     display:inline-block;
@@ -31,17 +34,21 @@
     bottom: 0;
     width: 100%;
     background-color: black;
-    opacity: 0.5;
+    opacity: 0;
+    transition: all .5s;
     /**/
     height: 50px;
     color: white;
     line-height: 50px;
     z-index: 233;
 }
+.play-controls:hover,.play-controls.active{
+    opacity:0.8;
+}
 
 .control-play {
     height: inherit;
-    margin: 0 10px;
+    padding: 0 10px;
 }
 
 .btn-left {
@@ -98,8 +105,8 @@
 
 .setting-container {
     position: absolute;
-    top: -320px;
-    right: 270px;
+    top: -300px;
+    right: 250px;
 }
 
 .setting-wrap {
@@ -107,13 +114,17 @@
     height: 300px;
     display: none;
     position: absolute;
-    border-radius: 5px;
+    /*border-radius: 5px;*/
     background-color: black;
     opacity: 0.8;
 }
 
-.check-hidden:checked~.setting-wrap {
+.check-hidden:checked~.setting-container .setting-wrap {
     display: block;
+}
+.check-hidden:checked~.icon-menu{
+  background: white;
+  color:black;
 }
 
 .setting-content {
@@ -124,6 +135,9 @@
 .setting-row {
     position: relative;
     height: 30px;
+    text-align: justify;
+    text-align-last: justify;
+    line-height:30px;
 }
 
 .setting-row .iconfont {
@@ -169,17 +183,35 @@
     line-height: 28px;
     text-align: center;
 }
-.disable-btn{
-  background:#D9D9D9;
-  cursor:auto;
-  color:black;
-}
+
 .submit-btn {
     background: #3385ff;
 }
+/*放入iconfont.css*/
+
 .icon-white {
     color: white;
 }
+
+.icon-voice {
+    line-height: 30px;
+}
+
+.icon-setting:after {
+    content: "\e7b5";
+    color: black;
+}
+
 .check-hidden {
     display: none;
+}
+.radio{
+  display:inline-block;
+  font-size:12px;
+}
+.radio label{
+  cursor: pointer;
+}
+.radio input{
+  vertical-align: sub;
 }

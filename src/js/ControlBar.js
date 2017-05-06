@@ -25,7 +25,7 @@ define(["require","MKPlayer"],function(require,player){
         playStatus = !playStatus;
         if(playStatus){
             view.play();
-            player.start(10);
+            player.start();
         }
         else{
             view.stop();
