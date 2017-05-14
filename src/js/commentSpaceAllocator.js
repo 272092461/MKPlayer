@@ -155,7 +155,7 @@ define(function(){
             resize:resize,
             remove:remove,
             clear:clear
-        }
+        };
     }
     return{
         create:create

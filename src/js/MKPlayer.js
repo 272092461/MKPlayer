@@ -32,7 +32,12 @@ define(["CommentManager"],function(manager){
         manager.timeto(second * 1000);
     }
     function setVolume(val){
+      if(val >= 0 && val <= 1){
         video.volume = val;
+      }
+    }
+    function getVolume(){
+      return video.volume;
     }
     function dispatchEvent(name){
         var calls = _listener[name];
@@ -55,7 +60,7 @@ define(["CommentManager"],function(manager){
         }
         else{
             video.removeAttribute("height");
-            manager.resize(width,video.offsetHeight);
+            manager.resize(width,video.clientHeight);
             return;
         }
         manager.resize(width,height);
@@ -68,6 +73,13 @@ define(["CommentManager"],function(manager){
         addEventListener:addEventListener,
         resize:resize,
         getMillTime:getMillTime,
-        setVolume:setVolume
+        setVolume:setVolume,
+        getVolume:getVolume,
+        get currentTime(){
+          return video.currentTime;
+        },
+        get duration(){
+          return video.duration;
+        }
     };
 });

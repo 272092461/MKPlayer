@@ -47,13 +47,14 @@ define(["require","MKPlayer"],function(require,player){
     }
     function changePlayTime(){
         getView();
-        view.setPlayLine(this.currentTime*100/this.duration + "%");
+        view.setPlayLine(player.currentTime*100/player.duration + "%");
     }
     function movePlayTime(e){
         var offsetLength = this.offsetWidth;
         var length = e.offsetX;
         var time = length/offsetLength * duration;
         player.timeto(time);
+        debugger;
         changePlayTime();
     }
     function changeLoadTime(){
@@ -63,9 +64,6 @@ define(["require","MKPlayer"],function(require,player){
             return;
         }
         view.setLoadLine(timeRanges.end(timeRanges.length-1)*100/this.duration + "%");
-    }
-    function changeVolume(e){
-        getView();
     }
     function getView(){
         if(view == undefined){
@@ -78,7 +76,6 @@ define(["require","MKPlayer"],function(require,player){
         changeFullscreen:changeFullscreen,
         changePlayTime:changePlayTime,
         changeLoadTime:changeLoadTime,
-        changeVolume:changeVolume,
         movePlayTime:movePlayTime
     };
 });

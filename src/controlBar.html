@@ -22,7 +22,7 @@
             opacity:0.8;
         }
 
-        .control-play {
+        .control-play,.control-fullscreen,.control-btn {
             height: inherit;
             padding: 0 10px;
         }
@@ -35,11 +35,7 @@
             float: right;
         }
 
-        .control-fullscreen {
-            float: right;
-            height: inherit;
-            margin: 0 10px;
-        }
+
 
         .control-processbar {
             height: inherit;
@@ -95,10 +91,10 @@
             opacity: 0.8;
         }
 
-        .check-hidden:checked~.setting-container .setting-wrap {
+        #comment-setting:checked~.setting-container .setting-wrap,#comment-voice:checked~.setting-voice {
             display: block;
         }
-        .check-hidden:checked~.icon-menu{
+        #comment-setting:checked~.icon-menu,#comment-voice:checked~.icon-voice{
           background: white;
           color:black;
         }
@@ -169,10 +165,6 @@
             color: white;
         }
 
-        .icon-voice {
-            line-height: 30px;
-        }
-
         .icon-setting:after {
             content: "\e7b5";
             color: black;
@@ -191,20 +183,70 @@
         .radio input{
           vertical-align: sub;
         }
+        .setting-voice{
+          display:none;
+          position: absolute;
+          padding:5px 15px;
+          background:black;
+          top:-70px;
+          right:100px;
+          user-select:none;
+        }
+        .voice-container,.voice-rate{
+          width:0;
+          height:0;
+          border-style:solid;
+          border-width:30px 10px;
+          border-left-color:transparent;
+          border-top-color: #B7BDBD;
+          border-right-color: #B7BDBD;
+          border-bottom-color:transparent;
+        }
+        .voice-rate{
+          position:absolute;
+          border-top-width:0px;
+          bottom:0px;
+          right:0px;
+          border-top-color: #0AA4EE;
+          border-right-color: #0AA4EE;
+          z-index: 2;
+        }
+        .voice-wrap{
+          position:relative;
+        }
+        .voice-cover{
+          position:absolute;
+          z-index:3;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right:0;
+          user-select:none;
+        }
     </style>
 </head>
 
 <body>
+
     <div class="play-controls">
         <label class="control-play iconfont icon-play btn-left"></label>
         <label class="control-fullscreen iconfont icon-fullscreen btn-right"></label>
         <input type="checkbox" name="" id="comment-setting" class="check-hidden">
-        <label class="control-play iconfont icon-menu btn-right" for="comment-setting">
-        </label>
+        <label class="control-btn iconfont icon-menu btn-right" for="comment-setting"></label>
+        <input type="checkbox" name="" id="comment-voice" class="check-hidden">
+        <label class="control-btn iconfont icon-voice btn-right" for="comment-voice"></label>
+
         <div class="control-processbar">
             <div class="process-load"></div>
             <div class="process-line"></div>
             <div class="process-play"></div>
+        </div>
+        <div class="setting-voice">
+          <div class="voice-wrap">
+            <div class="voice-container voice-background"></div>
+            <div class="voice-rate" style=""></div>
+          </div>
+          <div class="voice-cover"></div>
         </div>
         <div class="setting-container">
             <div class="setting-wrap">
@@ -248,6 +290,56 @@
           timer = setInterval(function(){
             dom.classList.remove('active');
           },3000);
+        })
+        var voiceControl = {
+          _wholeHeight:document.querySelector(".voice-background").offsetHeight,
+          get wholeHeight(){
+            return this._wholeHeight = this._wholeHeight=== 0 ?  document.querySelector(".voice-background").offsetHeight : this._wholeHeight;
+          },
+
+          _wholeWidth:document.querySelector(".voice-background").offsetWidth,
+          get wholeWidth(){
+            return this._wholeWidth = this._wholeWidth=== 0 ?  document.querySelector(".voice-background").offsetWidth : this._wholeWidth;
+          },
+          voiceDom:document.querySelector(".voice-rate"),
+          set voice(val){
+            var rh = this.wholeHeight*val;
+            this.setView(this.rateWidth(rh),rh);
+            this.onChange();
+          },
+          get voice(){
+            return this.voiceDom.offsetHeight/this.wholeHeight;
+          },
+          rateWidth:function(rH){
+            return this.wholeWidth*rH/this.wholeHeight;
+          },
+          setView:function(rW,rH){
+            if(rH>this.wholeHeight){
+              rH = this.wholeHeight;
+              rW = this.wholeWidth;
+            }
+            this.voiceDom.setAttribute("style","border-bottom-width:" + rH +"px;border-right-width:" + rW+"px;");
+          },
+          onChange:function(){}
+        }
+        document.querySelector(".voice-cover").addEventListener('click',function(e){
+          var rH = voiceControl.wholeHeight-e.layerY;
+          voiceControl.setView(voiceControl.rateWidth(rH),rH);
+        });
+        document.querySelector(".voice-cover").addEventListener('mousedown',function(e){
+          this.addEventListener('mousemove',voiceChange);
+
+        });
+        function voiceChange(e){
+          var rH = voiceControl.wholeHeight-e.layerY;
+          voiceControl.setView(voiceControl.rateWidth(rH),rH);
+          // console.log(e);
+        }
+        document.querySelector(".voice-cover").addEventListener('mouseup',function(e){
+          this.removeEventListener('mousemove',voiceChange);
+        });
+        document.querySelector(".voice-cover").addEventListener("mouseout",function(e){
+          this.removeEventListener("mousemove",voiceChange);
         })
     </script>
 

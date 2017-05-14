@@ -88,6 +88,9 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
           move(innerTime);
           run(innerTime);
           time+=innerTime;
+          if(timer){
+            stop();
+          }
           timer = requestDraw(arguments.callee);
         });
     }

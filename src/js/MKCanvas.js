@@ -109,6 +109,9 @@ define(function(){
             canvas.fillText(item.comObj.text,item.x,item.comObj.align_y+item.comObj.height);
         });
     }
+    function drawVideo(video,width,height){
+      canvas.drawImage(video,0,0,width,height);
+    }
     function getWidth(comment){
         if(!canvas){
             canvas = document.createElement("canvas").getContext("2d");
@@ -120,6 +123,7 @@ define(function(){
         bind:bind,
         add:add,
         draw:draw,
+        drawVideo:drawVideo,
         setAlpha:setAlpha,
         clear:clear,
         getWidth:getWidth
