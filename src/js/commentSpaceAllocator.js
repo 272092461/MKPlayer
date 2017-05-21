@@ -45,7 +45,6 @@ define(function(){
             }
         }
         function willCollide(existed,comment){
-            /*return existed.stime + existed.ttl >= comment.stime + comment.ttl/4;*/
             return existed.endTime >= comment.arriveTime || existed.outTime >= comment.stime;
         }
         function pathCheck(y,comment,pool){
@@ -77,7 +76,6 @@ define(function(){
             return true;
         }
         function assign(comment){
-
             if(comment.pindex === undefined){
                 comment.pindex = 0;
             }
@@ -114,24 +112,6 @@ define(function(){
                     pools.push([]);
                 }
             }
-            /*var y;
-            if(!comment.pindex){
-                comment.pindex = 0;
-            }
-            while(!pools[comment.pindex]){
-                pools.push([]);
-            }
-            for(var i = 0;i<pools.length;i++){
-                var pool = pools[i];
-                for(var j = 0;j<pool.length;j++){
-                    var top = pool[j].bottom + avoid;
-                    if(top)
-                    if(pathCheck(y,comment,pool)){
-                        y = top;
-                        return y;
-                    }
-                }
-            }*/
         }
         function remove(comment){
             var pool = pools[comment.pindex];
@@ -149,11 +129,15 @@ define(function(){
             width = _width;
             height = _height;
         }
+        function setAvoid(_avoid){
+          avoid = _avoid;
+        }
         return {
             init:init,
             add:add,
             resize:resize,
             remove:remove,
+            setAvoid:setAvoid,
             clear:clear
         };
     }

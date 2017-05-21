@@ -1,7 +1,6 @@
 define(function() {
     var clist = [];
     function create(xml) {
-        "use strict";
         var ds = xml.getElementsByTagName("d");
         var d;
         for (var i = 0; i < ds.length; i++) {
