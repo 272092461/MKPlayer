@@ -27,13 +27,12 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
     };
     function init(_canvas,_url,socket_url,_video){
         canvas = _canvas;
-        canvas.width = 800;
-        canvas.height = 600;
         MKCanvas.bind(_canvas);
+        MKCanvas.resize(800,600);
         builder.init({
             width:canvas.width,
             height:canvas.height}
-                    );
+        );
         csa.scroll = comment.create();
         csa.scrollbtm = comment.create();
         csa.bottom = comment.create();
@@ -48,26 +47,6 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
         });
         initAnimationFrame();
     }
-    function test(_canvas,_url){
-        canvas = _canvas;
-        // canvas.width = 800;
-        // canvas.height = 600;
-        MKCanvas.bind(_canvas);
-        builder.init({
-            width:canvas.width,
-            height:canvas.height}
-                    );
-        csa.scroll = comment.create();
-        csa.scrollbtm = comment.create();
-        csa.bottom = comment.create();
-        csa.top = comment.create();
-        csa.reserve = comment.create();
-        csa.init(canvas.width,canvas.height);
-        loader.load(_url,function(xml){
-            timeline = parser.create(xml);
-            start();
-        });
-    }
     // function start(){
     //     if(timer == null){
     //         timer = setInterval(function(){
@@ -80,29 +59,38 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
     // }
     var times = 0;
     function start(){
-        requestDraw(function(innerTime){
+        var drawLoop = function (innerTime) {
           if(innerTime>1000 || innerTime<0){
             timeto(video.currentTime*1000);
             return;
           }
-          move(innerTime);
-          run(innerTime);
           time+=innerTime;
           if(timer){
             stop();
           }
-          timer = requestDraw(arguments.callee);
-        });
+          move(innerTime);
+          run(innerTime);
+          timer = requestDraw(drawLoop);
+        }
+
+        requestDraw(drawLoop);
     }
     function requestDraw(callback){
       var date = video.currentTime*1000;
       var innerTime;
-      return requestAnimationFrame(function(excTime){
-        var lastdate = video.currentTime*1000;
-        innerTime = lastdate - date;
-        draw();
-        callback(innerTime);
-      });
+      return (() => {
+          return requestAnimationFrame(function(excTime){
+            var lastdate = video.currentTime*1000;
+            console.log(lastdate);
+            innerTime = lastdate - date;
+            // MKCanvas.draw();
+            console.log("canvas draw start");
+            MKCanvas.clear();
+            MKCanvas.draw();
+            console.log("canvas draw finally");
+            callback(innerTime);
+          });
+      })() | drawCache();                                                       //先请求绘制下一帧 再进入绘制计算
     }
     function initAnimationFrame() {                         //为requestAnimationFrame提供兼容性方案
         var vendors = ['webkit', 'moz'];
@@ -164,13 +152,15 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
             runline[i].time(time);
         }
     }
-    function draw(){
+    function drawCache(){
         if(runline.length === 0){
             return;
         }
-        MKCanvas.clear();
+        MKCanvas.clearCache();
+        console.log('drawCache start');
         MKCanvas.add(runline);
-        MKCanvas.draw();
+        MKCanvas.drawCache();
+        console.log("drawCache finally");
     }
     function send(data){
         var cmt = builder.builder(data);
@@ -230,8 +220,7 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
     function resize(_width,_height){
         width = _width;
         height = _height;
-        canvas.width = _width;
-        canvas.height= _height;
+        MKCanvas.resize(_width,_height);
         csa.resize(_width,_height-10);
         builder.resize(_width,_height-10);
     }
@@ -341,7 +330,6 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
         addEventListener:addEventListener,
         resize:resize,
         getTime:getTime,
-        test:test,
         receiveComment:receiveComment,
         reset:reset
     };

@@ -1,5 +1,6 @@
 define(function(){
     var canvas;
+    var canvas_cache = document.createElement('canvas').getContext('2d');
     var comments = [];
     var globalAlpha = 1;
     function bind(obj){
@@ -42,6 +43,10 @@ define(function(){
         canvas.clearRect(0,0,canvas.canvas.width,canvas.canvas.height);
         setFont({size:null});
     }
+    function clearCache(){
+        canvas_cache.clearRect(0,0,canvas_cache.canvas.width,canvas_cache.canvas.height);
+        setFont({size:null});
+    }
     function remove(comment){
         var p = comments.indexOf(comment);
         if(p!= -1){
@@ -56,7 +61,7 @@ define(function(){
         return function(comObj){
             if(size != comObj.size){
                 size = comObj.size;
-                canvas.font = size +"px"+" Microsoft YaHei";
+                canvas_cache.font = size +"px"+" Microsoft YaHei";
             }
         };
     }();
@@ -74,58 +79,57 @@ define(function(){
                 colorCache[comObj.color] = color;
 
             }
-            canvas.fillStyle = color;
+            canvas_cache.fillStyle = color;
         };
     }();
     function setAlpha(opacity){
-        canvas.globalAlpha = opacity;
+        canvas_cache.globalAlpha = opacity;
     }
-    function draw(){
+
+    function drawCache(){
         var staticComment = [];
-        canvas.textAlign = "start";
+        canvas_cache.textAlign = "start";
         comments.forEach(function(comObj,index){
             var x = comObj.align_x;
             if(x === "middle"){
-                x = canvas.canvas.width/2;                //顶端弹幕与底端弹幕层级较高
+                x = canvas_cache.canvas.width/2;                //顶端弹幕与底端弹幕层级较高
                 staticComment.push({
                   x:x,
                   comObj:comObj
                 });
-                // canvas.textAlign = "center";
-            }
-            // else{
-            //     canvas.textAlign = "start";
-            // }
-            else{
+            }else{
               setFont(comObj);
               setColor(comObj);
-              canvas.fillText(comObj.text,x,comObj.align_y+comObj.height);
+              canvas_cache.fillText(comObj.text,x,comObj.align_y+comObj.height);
             }
         });
-        canvas.textAlign = "center";
+        canvas_cache.textAlign = "center";
         staticComment.forEach(function(item,index){
             setFont(item.comObj);
             setColor(item.comObj);
-            canvas.fillText(item.comObj.text,item.x,item.comObj.align_y+item.comObj.height);
+            canvas_cache.fillText(item.comObj.text,item.x,item.comObj.align_y+item.comObj.height);
         });
     }
-    function drawVideo(video,width,height){
-      canvas.drawImage(video,0,0,width,height);
+    function draw(){
+        canvas.drawImage(canvas_cache.canvas,0,0);
     }
     function getWidth(comment){
-        if(!canvas){
-            canvas = document.createElement("canvas").getContext("2d");
-        }
         setFont(comment);
-        return canvas.measureText(comment.text).width;
+        return canvas_cache.measureText(comment.text).width;
+    }
+    function resize(width,height){
+        canvas_cache.canvas.width = canvas.canvas.width = width;
+        canvas_cache.canvas.height = canvas.canvas.height = height;
     }
     return{
         bind:bind,
         add:add,
         draw:draw,
-        drawVideo:drawVideo,
+        drawCache:drawCache,
         setAlpha:setAlpha,
         clear:clear,
-        getWidth:getWidth
+        clearCache: clearCache,
+        getWidth:getWidth,
+        resize:resize
     };
 });

@@ -54,7 +54,6 @@ define(["require","MKPlayer"],function(require,player){
         var length = e.offsetX;
         var time = length/offsetLength * duration;
         player.timeto(time);
-        debugger;
         changePlayTime();
     }
     function changeLoadTime(){

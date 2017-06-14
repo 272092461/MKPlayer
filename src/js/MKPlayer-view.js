@@ -19,7 +19,7 @@ define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
         var canvas = _("canvas","comment-canvas");
         var controls = buildControls();
 
-
+        video.style.visibility = "hidden";
         fragment.appendChild(video);
         fragment.appendChild(canvas);
         fragment.appendChild(controls);
@@ -41,10 +41,10 @@ define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
         player.init(video,canvas,commentUrl,socket_url);
         sender.init();
         if(MKPlayer.getAttribute("autoplay")){
-                autoPlay();
+            autoPlay();
         }
         initListener();
-        video.addEventListener('loadstart',function(){
+        video.addEventListener('resize',function(){
           player.resize(video.offsetWidth);
         });
 
