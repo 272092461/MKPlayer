@@ -1,0 +1,21 @@
+require.config({
+   paths:{
+       "MKCanvas":"MKCanvas",
+       "CommentSpaceAllocator":"CommentSpaceAllocator",
+       "CommentParser":"CommentParser",
+       "CommentLoader":"CommentLoader",
+       "CommentBuilder":"CommentBuilder",
+       "CommentManager":"CommentManager",
+       "MKPlayer":"MKPlayer",
+       "ControlBar":"ControlBar",
+       "MKPlayer-view":"MKPlayer-view",
+       "DataSender":"DataSender",
+       "CommentSender":"CommentSender",
+       "MKSocket":"MKSocket",
+       "socketIO":"http://localhost:8080/socket.io/socket.io.js",
+       "run":"run"
+   }
+});
+require(["./js/run"],function(run){
+
+});

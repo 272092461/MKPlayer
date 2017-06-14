@@ -1,0 +1,251 @@
+body{
+  margin-left: 0;
+}
+.MKPlayer{
+    font-size:0;
+    display:inline-block;
+    position:relative;
+}
+/*:-webkit-full-screen video, :-webkit-full-screen .player-body,:-webkit-full-screen{
+    width: 100%;
+    height: auto;
+}*/
+/*@media screen and (max-width:480px){
+    :-webkit-full-screen video, :-webkit-full-screen .player-body,:-webkit-full-screen{
+        width: 100%;
+        height: auto;
+    }
+}*/
+:-webkit-full-screen{
+    background-color:black;
+}
+.player-body{
+    display:inline-block;
+    position:relative;
+}
+.comment-canvas{
+    position:absolute;
+    top:0;
+    left:0;
+}
+.play-controls {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: black;
+    opacity: 0;
+    -webkit-transition: all .5s;
+    transition: all .5s;
+    /**/
+    height: 50px;
+    color: white;
+    line-height: 50px;
+    z-index: 233;
+}
+.play-controls:hover,.play-controls.active{
+    opacity:0.8;
+}
+
+.control-play,.control-fullscreen,.control-btn {
+    height: inherit;
+    padding: 0 10px;
+}
+
+.btn-left {
+    float: left;
+}
+
+.btn-right {
+    float: right;
+}
+
+
+
+.control-processbar {
+    height: inherit;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+}
+
+.process-line {
+    width: 100%;
+    height: 1px;
+    position: absolute;
+    top: 25px;
+    background-color: white;
+    z-index: 3;
+}
+
+.process-load {
+    height: 50px;
+    background-color: #6699CC;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.process-play {
+    height: 50px;
+    background: #CCFFFF;
+    background: -webkit-linear-gradient(right, #CCFFFF, #6699CC);
+    background: linear-gradient(to left, #CCFFFF, #6699CC);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+.setting-container {
+    position: absolute;
+    top: -300px;
+    right: 250px;
+}
+
+.setting-wrap {
+    width: 250px;
+    height: 300px;
+    display: none;
+    position: absolute;
+    /*border-radius: 5px;*/
+    background-color: black;
+    opacity: 0.8;
+}
+
+#comment-setting:checked~.setting-container .setting-wrap,#comment-voice:checked~.setting-voice {
+    display: block;
+}
+#comment-setting:checked~.icon-menu,#comment-voice:checked~.icon-voice{
+  background: white;
+  color:black;
+}
+
+.setting-content {
+    margin: 20px 25px;
+    line-height: 30px;
+}
+
+.setting-row {
+    position: relative;
+    height: 30px;
+    text-align: justify;
+    -moz-text-align-last: justify;
+         text-align-last: justify;
+    line-height:30px;
+}
+
+.setting-row .iconfont {
+    float: left;
+}
+
+.setting-icon {
+    display: inline-block;
+    color: white;
+    width: 30px;
+    margin-right: 10px;
+}
+
+.setting-line {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    height: 0;
+    border-bottom: 1px solid white;
+    width: 160px;
+}
+
+.comment-content {
+    resize: none;
+    outline: none;
+    border: 1px solid black;
+    border-radius: 5px;
+    height: 100px;
+    width: 100%;
+}
+
+.comment-wrap {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.btn {
+    width: 80px;
+    display: inline-block;
+    cursor: pointer;
+    color: white;
+    font-size: 14px;
+    line-height: 28px;
+    text-align: center;
+}
+
+.submit-btn {
+    background: #3385ff;
+}
+/*放入iconfont.css*/
+
+.icon-white {
+    color: white;
+}
+
+.icon-setting:after {
+    content: "\e7b5";
+    color: black;
+}
+
+.check-hidden {
+    display: none;
+}
+.radio{
+  display:inline-block;
+  font-size:12px;
+}
+.radio label{
+  cursor: pointer;
+}
+.radio input{
+  vertical-align: sub;
+}
+.setting-voice{
+  display:none;
+  position: absolute;
+  padding:5px 15px;
+  background:black;
+  top:-70px;
+  right:100px;
+  -webkit-user-select:none;
+     -moz-user-select:none;
+      -ms-user-select:none;
+          user-select:none;
+  cursor:pointer;
+}
+.voice-container,.voice-rate{
+  width:0;
+  height:0;
+  border-style:solid;
+  border-width:30px 10px;
+  border-left-color:transparent;
+  border-top-color: #B7BDBD;
+  border-right-color: #B7BDBD;
+  border-bottom-color:transparent;
+}
+.voice-rate{
+  position:absolute;
+  border-top-width:0px;
+  bottom:0px;
+  right:0px;
+  border-top-color: #0AA4EE;
+  border-right-color: #0AA4EE;
+  z-index: 2;
+}
+.voice-wrap{
+  position:relative;
+}
+.voice-cover{
+  position:absolute;
+  z-index:3;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right:0;
+}
