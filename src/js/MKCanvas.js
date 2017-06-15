@@ -11,21 +11,8 @@ define(function(){
         else{
             console.error("canvas binding error");
         }
+        canvas_cache.storkeStyle = "white";
     }
-    // function setDefault(comObj,def){
-    //     var temp = {};
-    //     if(comObj["text"]){
-    //         temp["text"] = comObj["text"];
-    //     }
-    //     else{
-    //         return;
-    //     }
-    //     for(var name in def){
-    //         temp[name] = comObj[name] == null ? def[name] : comObj[name];
-    //     }
-    //
-    //     return temp;
-    // }
 /**
  * comObj
  * @property text 文本
@@ -53,15 +40,12 @@ define(function(){
             comments.splice(p,1);
         }
     }
-    /*function setFont(comObj){
-        canvas.font ="bold " + comObj.size +"px"+" sans-serif";
-    }*/
     var setFont = function(){
         var size;
         return function(comObj){
             if(size != comObj.size){
                 size = comObj.size;
-                canvas_cache.font = size +"px"+" Microsoft YaHei";
+                canvas_cache.font = '600 '+size +"px"+" Arial";
             }
         };
     }();
@@ -101,6 +85,7 @@ define(function(){
               setFont(comObj);
               setColor(comObj);
               canvas_cache.fillText(comObj.text,x,comObj.align_y+comObj.height);
+              canvas_cache.strokeText(comObj.text,x,comObj.align_y+comObj.height);
             }
         });
         canvas_cache.textAlign = "center";
@@ -108,6 +93,7 @@ define(function(){
             setFont(item.comObj);
             setColor(item.comObj);
             canvas_cache.fillText(item.comObj.text,item.x,item.comObj.align_y+item.comObj.height);
+            canvas_cache.strokeText(item.comObj.text,item.x,item.comObj.align_y+item.comObj.height);
         });
     }
     function draw(){

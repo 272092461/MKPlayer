@@ -1,10 +1,9 @@
 define(function(){
-    "use strict";
     function create(){
         var pools = [];
         var width;
         var height;
-        var avoid = 1;
+        var avoid = 10;
         function init(_width,_height,_canvas){
             width = _width;
             height = _height;
@@ -48,7 +47,6 @@ define(function(){
             return existed.endTime >= comment.arriveTime || existed.outTime >= comment.stime;
         }
         function pathCheck(y,comment,pool){
-            "use strict";
             var bottom = y+comment.height;
             var right = comment.right;
             for(var i = 0;i < pool.length;i++){

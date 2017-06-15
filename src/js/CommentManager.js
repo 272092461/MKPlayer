@@ -81,13 +81,9 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
       return (() => {
           return requestAnimationFrame(function(excTime){
             var lastdate = video.currentTime*1000;
-            console.log(lastdate);
             innerTime = lastdate - date;
-            // MKCanvas.draw();
-            console.log("canvas draw start");
             MKCanvas.clear();
             MKCanvas.draw();
-            console.log("canvas draw finally");
             callback(innerTime);
           });
       })() | drawCache();                                                       //先请求绘制下一帧 再进入绘制计算
@@ -125,11 +121,6 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
             position++;
         }
     }
-    // function stop(){
-    //     console.log("stop");
-    //     clearInterval(timer);
-    //     timer=null;
-    // }
     function stop(){
         cancelAnimationFrame(timer);
         timer=null;
@@ -157,10 +148,8 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
             return;
         }
         MKCanvas.clearCache();
-        console.log('drawCache start');
         MKCanvas.add(runline);
         MKCanvas.drawCache();
-        console.log("drawCache finally");
     }
     function send(data){
         var cmt = builder.builder(data);
