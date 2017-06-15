@@ -1,4 +1,4 @@
-define(["require","MKPlayer"],function(require,player){
+define(["require","MKPlayer",'Event'],function(require,player,{playerEvent}){
     var currentTime;
     var loadTime;
     var duration;
@@ -18,22 +18,23 @@ define(["require","MKPlayer"],function(require,player){
             playStatus = barStatus["playStatus"] | false;
             fsStatus = barStatus["fsStatus"] | false;
         }
+        playerEvent.on('changePlayStatus', changePlayStatus);
+        playerEvent.on('changeFullscreen', changeFullscreen);
+        playerEvent.on('changeLoadTime', changeLoadTime);
+        playerEvent.on('changePlayTime', changePlayTime);
     }
     function changePlayStatus(e){
-        getView();
-        var button = e.toElement;
         playStatus = !playStatus;
         if(playStatus){
-            view.play();
+            playerEvent.emit('play');
             player.start();
         }
         else{
-            view.stop();
+            playerEvent.emit('stop');
             player.stop();
         }
     }
     function changeFullscreen(flag){
-        getView();
         fsStatus = flag | !fsStatus;
         if(flag == 0){
             fsStatus = 0;
@@ -56,13 +57,13 @@ define(["require","MKPlayer"],function(require,player){
         player.timeto(time);
         changePlayTime();
     }
-    function changeLoadTime(){
-        getView();
-        var timeRanges = this.buffered;
+    function changeLoadTime(e){
+        let video = e.target || e.srcElement;
+        let timeRanges = video.buffered;
         if(timeRanges.length == 0){
             return;
         }
-        view.setLoadLine(timeRanges.end(timeRanges.length-1)*100/this.duration + "%");
+        playerEvent.emit('loadTime', timeRanges.end(timeRanges.length-1)*100/video.duration + "%");
     }
     function getView(){
         if(view == undefined){

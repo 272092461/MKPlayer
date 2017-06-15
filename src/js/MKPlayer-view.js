@@ -1,4 +1,4 @@
-define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
+define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sender,{playerEvent}){
     var video;
     var control = {};
     var MKPlayer;
@@ -9,7 +9,6 @@ define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
         var commentUrl = MKPlayer.getAttribute("comment-url");
         var socket_url = MKPlayer.getAttribute("socket-url");
         var width = parseInt(MKPlayer.getAttribute("width")) || 800;
-
 
 
         var fragment = _("div","player-body");
@@ -24,18 +23,6 @@ define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
         fragment.appendChild(canvas);
         fragment.appendChild(controls);
         MKPlayer.appendChild(fragment);
-        // var height = video.offsetHeight;
-        // video.onresize = function(){
-        //     canvas.width = video.offsetWidth;
-        //     canvas.height = video.offsetHeight;
-        // };
-        // canvas.width = video.offsetWidth;
-        // canvas.height = video.offsetHeight;
-        /*manager.addEventListener("load",function(){
-            manager.start(10);
-            manager.timeto(10000);
-        });
-        manager.init(canvas,commentUrl);*/
         textArea = document.getElementById("comment-area");
         control.sendBtn = document.getElementById("comment-sender");
         player.init(video,canvas,commentUrl,socket_url);
@@ -141,24 +128,27 @@ define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
         controls.appendChild(setting);
         return controls;
     }
-    function autoPlay(){
-        player.addEventListener("load",function(){
-            bar.changePlayStatus({toElement:control.playButton});
-        });
-    }
+    // function autoPlay(){
+    //     player.addEventListener("load",function(){
+    //         bar.changePlayStatus({toElement:control.playButton});
+    //     });
+    // }
     function initListener(){
+        playerEvent.on('play', play);
+        playerEvent.on('stop', stop);
+        playerEvent.on('loadTime', setLoadLine);
         video.addEventListener("durationchange",function(){
             bar.init({
                 duration:video.duration,
             });
         });
-        video.addEventListener("progress",bar.changeLoadTime);
-        video.addEventListener("timeupdate",bar.changePlayTime);
-        video.addEventListener("ended",bar.changePlayStatus);
+        video.addEventListener("progress", (e) => playerEvent.emit('changeLoadTime', e));
+        video.addEventListener("timeupdate",(e) => playerEvent.emit('changePlayTime', e));
+        video.addEventListener("ended",() => playerEvent.emit('changePlayStatus'));
         control.process.addEventListener("touch",bar.movePlayTime);
         control.process.addEventListener("click",bar.movePlayTime);
-        control.fullscreen.addEventListener("click",bar.changeFullscreen);
-        control.playButton.addEventListener("click",bar.changePlayStatus);
+        control.fullscreen.addEventListener("click",() => playerEvent.emit('changeFullscreen'));
+        control.playButton.addEventListener("click",() => playerEvent.emit('changePlayStatus'));
         control.sendBtn.addEventListener("click",function(){
           sender.send(textArea.value,player.getMillTime());
         });
@@ -185,7 +175,7 @@ define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
         });
         document.addEventListener("keyup",function(e){
             if(e.keyCode == 27){
-                bar.changeFullscreen(0);
+                playerEvent.emit('changeFullscreen',0);
             }
         });
         var voiceControl = {
@@ -309,6 +299,7 @@ define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
         else{
             console.error("requset fullscreen failed");
         }
+        playerEvent.emit('full');
     }
     function setSubmit(isSubmit){
       var classList = control.sendBtn.classList;
@@ -343,6 +334,7 @@ define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
         else{
             console.error("exit fullscreen failed");
         }
+        playerEvent.emit('exitFull');
     }
     function turnWindow(){
         exitFullscreen(MKPlayer);
@@ -350,7 +342,6 @@ define(["MKPlayer","ControlBar","CommentSender"],function(player,bar,sender){
         var width = parseInt(MKPlayer.getAttribute("width")) || 800;
         /*player.resize(MKPlayer.getAttribute("width"),MKPlayer.getAttribute("height"));*/
         player.resize(width);
-        console.log("turnWindow");
     }
     function play(){
         control.playButton.className = "control-play iconfont icon-pause btn-left";

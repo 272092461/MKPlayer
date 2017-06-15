@@ -37,7 +37,8 @@ module.exports = {
       'MKSocket': resolve('src/js/MKSocket'),
       'socketIO': 'socket.io-client',
       'require': resolve('src/js/require'),
-      'run': resolve('src/js/run')
+      'run': resolve('src/js/run'),
+      'Event': resolve('src/js/PlayerEvent')
     }
   },
   module: {
