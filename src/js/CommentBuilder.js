@@ -1,34 +1,21 @@
 define(["MKCanvas"],function(canvas){
     "use strict";
-    var globalTTl = 6000;
+    var globalTTl;
     var width;
     var height;
-    function init(obj){
-        if("ttl" in obj){
-            setTTl(obj.ttl);
-        }
-        if("height" in obj){
-            setHeight(obj.height);
-        }
-        if("width" in obj){
-            setWidth(obj.width);
-        }
-
+    function init({ttl = 6000,height:_height,width:_width}){
+        setTTl(ttl);
+        width = _width;
+        height = _height;
     }
     function setTTl(val){
         globalTTl = val;
-    }
-    function setHeight(val){
-        height = val;
-    }
-    function setWidth(val){
-        width = val;
     }
     function CoreComment(obj){
         this.ttl = globalTTl;
         this.dur = globalTTl;
         this.align = 0;
-        setDefalut(this,obj);
+        Object.assign(this,obj);
     }
     Object.defineProperties(CoreComment.prototype,{
        height:{
@@ -120,10 +107,7 @@ define(["MKCanvas"],function(canvas){
 
     };
     function ScrollComment(obj){
-        this.ttl = globalTTl;
-        this.dur = globalTTl;
-        this.align = 0;
-        setDefalut(this,obj);
+        CoreComment.apply(this,[obj]);
     }
     ScrollComment.prototype = Object.create(CoreComment.prototype);
     Object.defineProperties(ScrollComment.prototype,{
@@ -160,11 +144,6 @@ define(["MKCanvas"],function(canvas){
             enumerable:true
         }
     });
-    function setDefalut(comment,obj){
-        for(var name in obj){
-            comment[name] = obj[name];
-        }
-    }
     function builder(obj){
         if(obj.mode == 1 || obj.mode == 2 || obj.mode == 6){
             return new ScrollComment(obj);
@@ -174,13 +153,8 @@ define(["MKCanvas"],function(canvas){
         }
     }
     function resize(_width,_height){
-        setWidth(_width);
-        setHeight(_height);
+        width = _width;
+        height = _height;
     }
-    return{
-        builder:builder,
-        setTTl:setTTl,
-        init:init,           //@param {width:*,height:*,ttl:*}
-        resize:resize
-    };
+    return{builder, setTTl, init, resize};
 });
