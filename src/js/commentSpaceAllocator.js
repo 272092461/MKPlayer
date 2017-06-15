@@ -3,7 +3,7 @@ define(function(){
         var pools = [];
         var width;
         var height;
-        var avoid = 10;
+        var avoid = 5;
         function init(_width,_height,_canvas){
             width = _width;
             height = _height;

@@ -18,7 +18,7 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
         var canvas = _("canvas","comment-canvas");
         var controls = buildControls();
 
-        video.style.visibility = "hidden";
+        // video.style.visibility = "hidden";
         fragment.appendChild(video);
         fragment.appendChild(canvas);
         fragment.appendChild(controls);
@@ -137,6 +137,7 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
         playerEvent.on('play', play);
         playerEvent.on('stop', stop);
         playerEvent.on('loadTime', setLoadLine);
+        playerEvent.on('playTime', setPlayLine);
         video.addEventListener("durationchange",function(){
             bar.init({
                 duration:video.duration,
@@ -145,8 +146,8 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
         video.addEventListener("progress", (e) => playerEvent.emit('changeLoadTime', e));
         video.addEventListener("timeupdate",(e) => playerEvent.emit('changePlayTime', e));
         video.addEventListener("ended",() => playerEvent.emit('changePlayStatus'));
-        control.process.addEventListener("touch",bar.movePlayTime);
-        control.process.addEventListener("click",bar.movePlayTime);
+        control.process.addEventListener("touch", (e) => playerEvent.emit('movePlayTime', e,control.process));
+        control.process.addEventListener("click", (e) => playerEvent.emit('movePlayTime', e,control.process));
         control.fullscreen.addEventListener("click",() => playerEvent.emit('changeFullscreen'));
         control.playButton.addEventListener("click",() => playerEvent.emit('changePlayStatus'));
         control.sendBtn.addEventListener("click",function(){

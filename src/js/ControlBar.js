@@ -1,4 +1,4 @@
-define(["require","MKPlayer",'Event'],function(require,player,{playerEvent}){
+define(["MKPlayer",'Event'],function(player,{playerEvent}){
     var currentTime;
     var loadTime;
     var duration;
@@ -22,6 +22,7 @@ define(["require","MKPlayer",'Event'],function(require,player,{playerEvent}){
         playerEvent.on('changeFullscreen', changeFullscreen);
         playerEvent.on('changeLoadTime', changeLoadTime);
         playerEvent.on('changePlayTime', changePlayTime);
+        playerEvent.on('movePlayTime', movePlayTime);
     }
     function changePlayStatus(e){
         playStatus = !playStatus;
@@ -47,11 +48,10 @@ define(["require","MKPlayer",'Event'],function(require,player,{playerEvent}){
         }
     }
     function changePlayTime(){
-        getView();
-        view.setPlayLine(player.currentTime*100/player.duration + "%");
+        playerEvent.emit('playTime',player.currentTime*100/player.duration + "%");
     }
-    function movePlayTime(e){
-        var offsetLength = this.offsetWidth;
+    function movePlayTime(e,bar){
+        var offsetLength = bar.offsetWidth;
         var length = e.offsetX;
         var time = length/offsetLength * duration;
         player.timeto(time);
@@ -64,11 +64,6 @@ define(["require","MKPlayer",'Event'],function(require,player,{playerEvent}){
             return;
         }
         playerEvent.emit('loadTime', timeRanges.end(timeRanges.length-1)*100/video.duration + "%");
-    }
-    function getView(){
-        if(view == undefined){
-            view = require("MKPlayer-view");
-        }
     }
     return{
         init:init,
