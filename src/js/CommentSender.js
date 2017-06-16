@@ -18,7 +18,7 @@ define(["CommentManager","require","DataSender"],function(manager,require,datase
     return parseInt(new Date().getTime()/1000);
   }
   function send(text,stime){
-    comment = Object.create(param);
+    comment = Object.assign(param);
     if(sendable === false){
       return;
     }

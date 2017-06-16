@@ -13,7 +13,7 @@ define(function(){
             binInsert(comment,pools[comment.pindex]);                          /*二分插入弹幕池*/
         }
         function binInsert(comment,pool){
-            if(pool.length == 0){
+            if(pool.length == 1){
                 pool.push(comment);
             }
             else if(comment.bottom<=pool[0].bottom){

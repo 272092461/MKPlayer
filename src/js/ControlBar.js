@@ -5,7 +5,6 @@ define(["MKPlayer",'Event'],function(player,{playerEvent}){
     var volume;
     var playStatus;
     var fsStatus;
-    var view;
     function init(barStatus){
         if(!("duration" in barStatus)){
             console.error("Please init duration int barStatus");
@@ -41,10 +40,10 @@ define(["MKPlayer",'Event'],function(player,{playerEvent}){
             fsStatus = 0;
         }
         if(fsStatus){
-            view.turnFullscreen();
+            playerEvent.emit('fullscreen');
         }
         else{
-            view.turnWindow();
+            playerEvent.emit('turnWindow');
         }
     }
     function changePlayTime(){

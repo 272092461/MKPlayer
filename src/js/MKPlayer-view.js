@@ -138,6 +138,8 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
         playerEvent.on('stop', stop);
         playerEvent.on('loadTime', setLoadLine);
         playerEvent.on('playTime', setPlayLine);
+        playerEvent.on('fullscreen', turnFullscreen);
+        playerEvent.on('turnWindow' , turnWindow);
         video.addEventListener("durationchange",function(){
             bar.init({
                 duration:video.duration,
@@ -284,7 +286,7 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
         player.resize(availWidth,availHeight);
         return flag;
     }
-    function requestFullscreen(docElm){
+    function requestFullscreen(docElm = MKPlayer){
         if (docElm.requestFullscreen) {
             docElm.requestFullscreen();
         }

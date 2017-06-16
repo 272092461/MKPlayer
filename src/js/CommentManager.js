@@ -229,9 +229,6 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
     }
     function receiveComment(comment){
         var index = parser.add(comment);
-        if(index<=position){
-          //position++;
-        }
     }
     function receiveCommentXML(data){
         var cjson = JSON.parse(data);
