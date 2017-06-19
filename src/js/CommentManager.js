@@ -232,28 +232,18 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
     }
     function receiveCommentXML(data){
         var cjson = JSON.parse(data);
-        var obj = {};
         var xml = createXML(cjson.data);
         var d = xml.getElementsByTagName('d')[0];
         var opt = d.getAttribute("p").split(",");
         var stime = Math.round(opt[0] * 1000);
+        var delay = 0;
         if(stime<time){                                  //在当前帧之前 移动播放轴
           position++;
         }
         else if(stime<time+20){                           //在当前帧中 移动至下一帧
-          stime = stime+20;
+          delay = 20;
         }
-        obj.stime = stime;
-        obj.mode = parseInt(opt[1]);
-        obj.size = parseInt(opt[2]);
-        obj.color = parseInt(opt[3]);
-        obj.date = parseInt(opt[4]);
-        obj.pool = parseInt(opt[5]);
-        if (opt[7] != null)
-            obj.dbid = parseInt(opt[7]);
-        obj.hash = opt[6];
-        obj.text = d.childNodes[0].nodeValue.replace(/(\/n|\\n|\n|\r\n)/g, "\n");
-        parser.add(obj);
+        parser.addXML(xml,delay);
     }
     function createXML(str){
   　　if(document.all){
@@ -308,15 +298,5 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
       csa.top.clear();
       csa.reserve.clear();
     }
-    return{
-        init:init,
-        start:start,
-        stop:stop,
-        timeto:timeto,
-        addEventListener:addEventListener,
-        resize:resize,
-        getTime:getTime,
-        receiveComment:receiveComment,
-        reset:reset
-    };
+    return{ init, start, stop, timeto, addEventListener, resize, getTime, receiveComment, reset };
 });

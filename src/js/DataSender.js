@@ -17,7 +17,5 @@ define(["MKSocket","CommentManager"],function(socket,manager){
         '</d>';
         return data;
     }
-    return{
-        send:send
-    };
+    return{ send };
 });

@@ -4,7 +4,7 @@ define(function(){
         var width;
         var height;
         var avoid = 5;
-        function init(_width,_height,_canvas){
+        function init(_width = 0,_height = 0){
             width = _width;
             height = _height;
         }
@@ -123,23 +123,14 @@ define(function(){
         function clear(){
             pools = [];
         }
-        function resize(_width,_height){
+        function resize(_width = 0,_height = 0){
             width = _width;
             height = _height;
         }
         function setAvoid(_avoid){
           avoid = _avoid;
         }
-        return {
-            init:init,
-            add:add,
-            resize:resize,
-            remove:remove,
-            setAvoid:setAvoid,
-            clear:clear
-        };
+        return { init, add, resize, remove, setAvoid, clear };
     }
-    return{
-        create:create
-    };
+    return{ create };
 });

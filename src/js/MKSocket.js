@@ -42,8 +42,5 @@ define(["socketIO"],function(io){
         }
         socket.emit("message",data);
     }
-    return {
-        init:init,
-        send:send
-    };
+    return { init, send };
 });

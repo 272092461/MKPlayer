@@ -18,7 +18,7 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
         var canvas = _("canvas","comment-canvas");
         var controls = buildControls();
 
-        // video.style.visibility = "hidden";
+        video.style.visibility = "hidden";
         fragment.appendChild(video);
         fragment.appendChild(canvas);
         fragment.appendChild(controls);
@@ -145,13 +145,13 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
                 duration:video.duration,
             });
         });
-        video.addEventListener("progress", (e) => playerEvent.emit('changeLoadTime', e));
-        video.addEventListener("timeupdate",(e) => playerEvent.emit('changePlayTime', e));
-        video.addEventListener("ended",() => playerEvent.emit('changePlayStatus'));
-        control.process.addEventListener("touch", (e) => playerEvent.emit('movePlayTime', e,control.process));
-        control.process.addEventListener("click", (e) => playerEvent.emit('movePlayTime', e,control.process));
-        control.fullscreen.addEventListener("click",() => playerEvent.emit('changeFullscreen'));
-        control.playButton.addEventListener("click",() => playerEvent.emit('changePlayStatus'));
+        video.addEventListener('progress', bar.changeLoadTime);
+        video.addEventListener("timeupdate", bar.changePlayTime);
+        video.addEventListener("ended", bar.changePlayStatus);
+        control.process.addEventListener("touch", bar.movePlayTime);
+        control.process.addEventListener("click", bar.movePlayTime);
+        control.fullscreen.addEventListener("click", bar.changeFullscreen);
+        control.playButton.addEventListener("click", bar.changePlayStatus);
         control.sendBtn.addEventListener("click",function(){
           sender.send(textArea.value,player.getMillTime());
         });
@@ -178,7 +178,8 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
         });
         document.addEventListener("keyup",function(e){
             if(e.keyCode == 27){
-                playerEvent.emit('changeFullscreen',0);
+                bar.changeFullscreen(0)
+                // playerEvent.emit('changeFullscreen',0);
             }
         });
         var voiceControl = {
@@ -304,17 +305,6 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
         }
         playerEvent.emit('full');
     }
-    function setSubmit(isSubmit){
-      var classList = control.sendBtn.classList;
-      if(isSubmit){
-        classList.remove("disable-btn");
-        classList.add("submit-btn");
-      }
-      else{
-        classList.remove("submit-btn");
-        classList.add("disable-btn");
-      }
-    }
     function exitFullscreen(docElm){
         if (docElm.exitFullscreen) {
             docElm.exitFullscreen();
@@ -352,14 +342,5 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
     function stop(){
         control.playButton.className = "control-play iconfont icon-play btn-left";
     }
-    return{
-        build:build,
-        setLoadLine:setLoadLine,
-        setPlayLine:setPlayLine,
-        turnFullscreen:turnFullscreen,
-        turnWindow:turnWindow,
-        play:play,
-        stop:stop,
-        setSubmit:setSubmit
-    };
+    return{ build, setLoadLine, setPlayLine, turnFullscreen, turnWindow, play, stop };
 });

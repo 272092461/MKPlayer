@@ -17,11 +17,6 @@ define(["MKPlayer",'Event'],function(player,{playerEvent}){
             playStatus = barStatus["playStatus"] | false;
             fsStatus = barStatus["fsStatus"] | false;
         }
-        playerEvent.on('changePlayStatus', changePlayStatus);
-        playerEvent.on('changeFullscreen', changeFullscreen);
-        playerEvent.on('changeLoadTime', changeLoadTime);
-        playerEvent.on('changePlayTime', changePlayTime);
-        playerEvent.on('movePlayTime', movePlayTime);
     }
     function changePlayStatus(e){
         playStatus = !playStatus;
@@ -49,8 +44,8 @@ define(["MKPlayer",'Event'],function(player,{playerEvent}){
     function changePlayTime(){
         playerEvent.emit('playTime',player.currentTime*100/player.duration + "%");
     }
-    function movePlayTime(e,bar){
-        var offsetLength = bar.offsetWidth;
+    function movePlayTime(e){
+        var offsetLength = this.offsetWidth;
         var length = e.offsetX;
         var time = length/offsetLength * duration;
         player.timeto(time);
@@ -64,12 +59,5 @@ define(["MKPlayer",'Event'],function(player,{playerEvent}){
         }
         playerEvent.emit('loadTime', timeRanges.end(timeRanges.length-1)*100/video.duration + "%");
     }
-    return{
-        init:init,
-        changePlayStatus:changePlayStatus,
-        changeFullscreen:changeFullscreen,
-        changePlayTime:changePlayTime,
-        changeLoadTime:changeLoadTime,
-        movePlayTime:movePlayTime
-    };
+    return{ init, changePlayStatus, changeFullscreen, changePlayTime, changeLoadTime, movePlayTime };
 });

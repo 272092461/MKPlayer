@@ -9,7 +9,5 @@ define(function(){
         }
         xmlhttp.send();
     }
-    return {
-        load:load
-    }
+    return { load };
 });

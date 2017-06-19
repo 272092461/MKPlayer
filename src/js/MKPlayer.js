@@ -18,11 +18,9 @@ define(["CommentManager"],function(manager){
     }
     function start(val){
         video.play();
-        /*manager.start(val);*/
     }
     function stop(){
         video.pause();
-        /*manager.stop();*/
     }
     function getMillTime(){
       return manager.getTime();
@@ -65,16 +63,7 @@ define(["CommentManager"],function(manager){
         }
         manager.resize(width,height);
     }
-    return{
-        init:init,
-        start:start,
-        stop:stop,
-        timeto:timeto,
-        addEventListener:addEventListener,
-        resize:resize,
-        getMillTime:getMillTime,
-        setVolume:setVolume,
-        getVolume:getVolume,
+    return { init, start, stop, timeto, addEventListener, resize, getMillTime, setVolume, getVolume,
         get currentTime(){
           return video.currentTime;
         },

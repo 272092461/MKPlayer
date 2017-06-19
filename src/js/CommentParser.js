@@ -7,20 +7,7 @@ define(function() {
             d = ds[i];
             if (!d.childNodes[0])
                 continue;
-            var obj = {};
-            var opt = d.getAttribute("p").split(",");
-            obj.stime = Math.round(opt[0] * 1000);                      //开始时间
-            obj.mode = parseInt(opt[1]);                                //弹幕模式
-            obj.size = parseInt(opt[2]);                                //字体大小
-            obj.color = parseInt(opt[3]);                               //字体颜色
-
-            obj.date = parseInt(opt[4]);                                //发送日期
-            obj.pool = parseInt(opt[5]);                                //弹幕池
-            if (opt[7] != null)
-                obj.dbid = parseInt(opt[7]);                            //用户id
-            obj.hash = opt[6];
-            obj.text = d.childNodes[0].nodeValue.replace(/(\/n|\\n|\n|\r\n)/g, "\n");
-            add(obj);
+            addXML(d);
         }
         return clist;
     }
@@ -56,20 +43,16 @@ define(function() {
     function add(comment) {
         return binInsert(comment, clist);
     }
-    function addXML(xml) {
+    function parseArrInt(arr){
+      return arr.map( (item) => parseInt(item));
+    }
+    function addXML(xml, delay = 0) {
         var obj = {};
         var opt = xml.getAttribute("p").split(",");
-        obj.stime = Math.round(opt[0] * 1000)+20;
-        obj.mode = parseInt(opt[1]);
-        obj.size = parseInt(opt[2]);
-        obj.color = parseInt(opt[3]);
-        console.log(obj.color);
-        obj.date = parseInt(opt[4]);
-        obj.pool = parseInt(opt[5]);
-        if (opt[7] != null)
-            obj.dbid = parseInt(opt[7]);
-        obj.hash = opt[6];
-        obj.text = d.childNodes[0].nodeValue.replace(/(\/n|\\n|\n|\r\n)/g, "\n");
+        var optInt = parseArrInt(opt);
+        [obj.stime, obj.mode, obj.size, obj.color, obj.date, obj.pool, obj.hash, obj.dbid] = optInt;
+        obj.stime = Math.round(obj.stime * 1000) + delay;
+        obj.text = xml.childNodes[0].nodeValue.replace(/(\/n|\\n|\n|\r\n)/g, "\n");
         return add(obj);
     }
     return {create, add, addXML};

@@ -107,15 +107,5 @@ define(function(){
         canvas_cache.canvas.width = canvas.canvas.width = width;
         canvas_cache.canvas.height = canvas.canvas.height = height;
     }
-    return{
-        bind:bind,
-        add:add,
-        draw:draw,
-        drawCache:drawCache,
-        setAlpha:setAlpha,
-        clear:clear,
-        clearCache: clearCache,
-        getWidth:getWidth,
-        resize:resize
-    };
+    return{ bind, add, draw, drawCache, setAlpha, clear, clearCache, getWidth, resize };
 });
