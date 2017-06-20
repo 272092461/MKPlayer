@@ -51,9 +51,9 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
     //         },innerTime);
     //     }
     // }
-    function create({ canvas, comment_url, socket_url, video }){
-      init( canvas, comment_url, socket_url, video );
-    }
+    // function create({ canvas, comment_url, socket_url, video }){
+    //   init( canvas, comment_url, socket_url, video );
+    // }
     var times = 0;
     function start(){
         var drawLoop = function (innerTime) {

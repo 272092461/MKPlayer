@@ -20,7 +20,7 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
         var canvas = _("canvas","comment-canvas");
         var controls = buildControls();
 
-        video.style.visibility = "hidden";
+        // video.style.visibility = "hidden";
         fragment.appendChild(video);
         fragment.appendChild(canvas);
         fragment.appendChild(controls);
@@ -44,26 +44,26 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
      * @param  {[type]} video_url [description]
      * @return {[type]}           [description]
      */
-    function create({ dom, video_url, width }){
-      if(!dom){
-        console.error('请为播放器挂载节点');
-      }
-      MKPlayer = dom;
-      video = buildVideo( video_url, width );
-      let fragment = _("div","player-body");
-      var controls = buildControls();
-      let canvas = _("canvas","comment-canvas");
-      fragment.appendChild(video);
-      fragment.appendChild(canvas);
-      fragment.appendChild(controls);
-      MKPlayer.appendChild(fragment);
-      textArea = document.getElementById("comment-area");
-      control.sendBtn = document.getElementById("comment-sender");
-      sender.init();
-      initListener();
-
-      return { canvas, video };
-    }
+    // function create({ dom, video_url, width }){
+    //   if(!dom){
+    //     console.error('请为播放器挂载节点');
+    //   }
+    //   MKPlayer = dom;
+    //   video = buildVideo( video_url, width );
+    //   let fragment = _("div","player-body");
+    //   var controls = buildControls();
+    //   let canvas = _("canvas","comment-canvas");
+    //   fragment.appendChild(video);
+    //   fragment.appendChild(canvas);
+    //   fragment.appendChild(controls);
+    //   MKPlayer.appendChild(fragment);
+    //   textArea = document.getElementById("comment-area");
+    //   control.sendBtn = document.getElementById("comment-sender");
+    //   sender.init();
+    //   initListener();
+    //
+    //   return { canvas, video };
+    // }
     function buildVideo(url,width,height){
         url = url.split(";");
         var video = document.createElement("video");
