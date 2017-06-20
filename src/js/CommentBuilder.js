@@ -1,9 +1,8 @@
 define(["MKCanvas"],function(canvas){
-    "use strict";
     var globalTTl;
     var width;
     var height;
-    function init({ttl = 6000,height:_height,width:_width}){
+    function init({ ttl,height:_height,width:_width } = { ttl: 6000 ,height:0, width: 0 }){
         setTTl(ttl);
         width = _width;
         height = _height;
@@ -109,7 +108,7 @@ define(["MKCanvas"],function(canvas){
     function ScrollComment(obj){
         CoreComment.apply(this,[obj]);
     }
-    ScrollComment.prototype = Object.create(CoreComment.prototype);
+    ScrollComment.prototype = Object.create(CoreComment.prototype);                         //继承弹幕类
     Object.defineProperties(ScrollComment.prototype,{
         x:{
             get:function(){

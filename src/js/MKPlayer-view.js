@@ -2,6 +2,8 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
     var video;
     var control = {};
     var MKPlayer;
+    var height;
+    var width;
     var textArea;
     function build(Player){
         MKPlayer = Player;
@@ -27,14 +29,40 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
         control.sendBtn = document.getElementById("comment-sender");
         player.init(video,canvas,commentUrl,socket_url);
         sender.init();
-        if(MKPlayer.getAttribute("autoplay")){
-            autoPlay();
-        }
+        // if(MKPlayer.getAttribute("autoplay")){
+        //     autoPlay();
+        // }
         initListener();
         video.addEventListener('resize',function(){
           player.resize(video.offsetWidth);
         });
 
+    }
+    /**
+     * [create description]
+     * @param  {[type]} dom       [description]
+     * @param  {[type]} video_url [description]
+     * @return {[type]}           [description]
+     */
+    function create({ dom, video_url, width }){
+      if(!dom){
+        console.error('请为播放器挂载节点');
+      }
+      MKPlayer = dom;
+      video = buildVideo( video_url, width );
+      let fragment = _("div","player-body");
+      var controls = buildControls();
+      let canvas = _("canvas","comment-canvas");
+      fragment.appendChild(video);
+      fragment.appendChild(canvas);
+      fragment.appendChild(controls);
+      MKPlayer.appendChild(fragment);
+      textArea = document.getElementById("comment-area");
+      control.sendBtn = document.getElementById("comment-sender");
+      sender.init();
+      initListener();
+
+      return { canvas, video };
     }
     function buildVideo(url,width,height){
         url = url.split(";");
@@ -226,9 +254,7 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
             this.draw(this.rateWidth(rh),rh);
           }
         };
-        document.querySelector("#comment-voice").addEventListener('change',function(){
-          voiceControl.init();
-        });
+        document.querySelector("#comment-voice").addEventListener( 'change', () => voiceControl.init() );
         document.querySelector(".voice-cover").addEventListener('click',function(e){
           var rH = voiceControl.wholeHeight-e.layerY;
           voiceControl.setView(voiceControl.rateWidth(rH),rH);
@@ -288,52 +314,20 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
         return flag;
     }
     function requestFullscreen(docElm = MKPlayer){
-        if (docElm.requestFullscreen) {
-            docElm.requestFullscreen();
-        }
-        else if (docElm.mozRequestFullScreen) {
-            docElm.mozRequestFullScreen();
-        }
-        else if (docElm.webkitRequestFullScreen) {
-            docElm.webkitRequestFullScreen();
-        }
-        else if (docElm.msRequestFullscreen) {
-            docElm.msRequestFullscreen();
-        }
-        else{
-            console.error("requset fullscreen failed");
-        }
-        playerEvent.emit('full');
+        docElm.requestFullscreen = docElm.requestFullscreen || docElm.webkitRequestFullScreen || docElm.mozRequestFullScreen ||
+        docElm.msRequestFullscreen || (() => console.error('request fullscreen failed'));
+        docElm.requestFullscreen();
     }
     function exitFullscreen(docElm){
-        if (docElm.exitFullscreen) {
-            docElm.exitFullscreen();
-        }
-        else if (docElm.mozCancelFullScreen) {
-            docElm.mozCancelFullScreen();
-        }
-        else if (docElm.webkitCancelFullScreen) {
-            docElm.webkitCancelFullScreen();
-        }
-        else if (docElm.msExitFullscreen) {
-            docElm.msExitFullscreen();
-        }
-        else if(document.msExitFullscreen){
-          document.msExitFullscreen();
-        }
-        else if(document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-        }
-        else{
-            console.error("exit fullscreen failed");
-        }
-        playerEvent.emit('exitFull');
+        docElm.exitFullscreen = docElm.exitFullscreen || docElm.webkitCancelFullScreen || docElm.mozCancelFullScreen ||
+        document.webkitExitFullscreen || docElm.msExitFullscreen || document.msExitFullscreen ||
+        (() => console.error('exit fullscreen failed'));
+        docElm.exitFullscreen();
     }
     function turnWindow(){
         exitFullscreen(MKPlayer);
         MKPlayer.style.transform = "";
         var width = parseInt(MKPlayer.getAttribute("width")) || 800;
-        /*player.resize(MKPlayer.getAttribute("width"),MKPlayer.getAttribute("height"));*/
         player.resize(width);
     }
     function play(){

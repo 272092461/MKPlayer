@@ -1,13 +1,10 @@
-define(["CommentManager"],function(manager){
+define(["CommentManager","MKPlayer-view"],function(manager,view){
     var video;
     var _listener = {};
     function init(_video,_canvas,_url,socket_url){
         video = _video;
         manager.init(_canvas,_url,socket_url,video);
         video.addEventListener("play",manager.start);
-        // video.addEventListener("timeupdate",function(){
-        //     console.log(this.currentTime*1000 +"  "+manager.getTime());
-        // });
         video.addEventListener("ended",function(){
           manager.reset();
         });
@@ -15,6 +12,17 @@ define(["CommentManager"],function(manager){
         manager.addEventListener("load",function(){
             dispatchEvent("load");
         });
+    }
+    function create({ container:dom, video_url, comment_url, socket_url, width, height }){
+      dom.classList.add('MKPlayer');
+      let { canvas, video: _video } = view.create({ dom, video_url, width })
+      video = _video
+      manager.create({canvas,comment_url,socket_url,video});
+      video.addEventListener("play",manager.start);
+      video.addEventListener("ended",manager.reset);
+      video.addEventListener("pause",manager.stop);
+      manager.addEventListener("load", () => dispatchEvent("load") );
+      video.addEventListener('resize',() => resize(video.offsetWidth) );
     }
     function start(val){
         video.play();

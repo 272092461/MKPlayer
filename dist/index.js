@@ -28,21 +28,6 @@ app.use('/static',function(req,res,next){
     }
     next();
 },express.static('static'));
-// app.get("/*",function(req,res){
-//     var path = req.path;
-//     console.log(path);
-//     res.sendFile(__dirname+path);
-//     var pattern = /\/.*\.xml$/;
-//     var io_namespace = path.match(pattern);
-//     if(io_namespace === null){return;}
-//     else{
-//       io_namespace = io_namespace[0];
-//       if(!nspSet.has(io_namespace)){
-//         nspSet.add(io_namespace);
-//         commentSocket.newNsp(io_namespace);
-//       }
-//     }
-// });
 var server = app.listen(2333,function(){
     var address = server.address();
     var host = address.host;

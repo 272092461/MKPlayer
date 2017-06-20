@@ -1,5 +1,4 @@
 define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","CommentBuilder","MKSocket"],function(MKCanvas,comment,loader,parser,builder,socket){
-    var canvas;
     var _listener = {};
     var timeline;
     var video;
@@ -26,19 +25,14 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
         }
     };
     function init(_canvas,_url,socket_url,_video){
-        canvas = _canvas;
         MKCanvas.bind(_canvas);
-        MKCanvas.resize(800,600);
-        builder.init({
-            width:canvas.width,
-            height:canvas.height}
-        );
+        builder.init();
         csa.scroll = comment.create();
         csa.scrollbtm = comment.create();
         csa.bottom = comment.create();
         csa.top = comment.create();
         csa.reserve = comment.create();
-        csa.init(canvas.width,canvas.height);
+        csa.init(_canvas.width,_canvas.height);
         socket.init(socket_url,receiveCommentXML);
         video = _video;
         loader.load(_url,function(xml){
@@ -57,6 +51,9 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
     //         },innerTime);
     //     }
     // }
+    function create({ canvas, comment_url, socket_url, video }){
+      init( canvas, comment_url, socket_url, video );
+    }
     var times = 0;
     function start(){
         var drawLoop = function (innerTime) {
