@@ -23,7 +23,8 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
         // video.style.visibility = "hidden";
         fragment.appendChild(video);
         fragment.appendChild(canvas);
-        fragment.appendChild(controls);
+        player.addEventListener('load',() => fragment.appendChild(controls));
+
         MKPlayer.appendChild(fragment);
         textArea = document.getElementById("comment-area");
         control.sendBtn = document.getElementById("comment-sender");
@@ -320,7 +321,7 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
     }
     function exitFullscreen(docElm){
         docElm.exitFullscreen = docElm.exitFullscreen || docElm.webkitCancelFullScreen || docElm.mozCancelFullScreen ||
-        document.webkitExitFullscreen || docElm.msExitFullscreen || document.msExitFullscreen ||
+        document.webkitExitFullscreen.bind(document) || docElm.msExitFullscreen || document.msExitFullscreen.bind(document) ||
         (() => console.error('exit fullscreen failed'));
         docElm.exitFullscreen();
     }
