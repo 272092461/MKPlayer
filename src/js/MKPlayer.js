@@ -13,17 +13,15 @@ define(["CommentManager","MKPlayer-view"],function(manager,view){
             dispatchEvent("load");
         });
     }
-    // function create({ container:dom, video_url, comment_url, socket_url, width, height }){
-    //   dom.classList.add('MKPlayer');
-    //   let { canvas, video: _video } = view.create({ dom, video_url, width })
-    //   video = _video
-    //   manager.create({canvas,comment_url,socket_url,video});
-    //   video.addEventListener("play",manager.start);
-    //   video.addEventListener("ended",manager.reset);
-    //   video.addEventListener("pause",manager.stop);
-    //   manager.addEventListener("load", () => dispatchEvent("load") );
-    //   video.addEventListener('resize',() => resize(video.offsetWidth) );
-    // }
+    function create({ canvas, video:_video, comment_url, socket_url}){
+      video = _video
+      manager.init(canvas, comment_url, socket_url, video);
+      video.addEventListener("play",manager.start);
+      video.addEventListener("ended",manager.reset);
+      video.addEventListener("pause",manager.stop);
+      manager.addEventListener("load", () => dispatchEvent("load") );
+      video.addEventListener('resize',() => resize(video.offsetWidth) );
+    }
     function start(val){
         video.play();
     }
@@ -71,7 +69,7 @@ define(["CommentManager","MKPlayer-view"],function(manager,view){
         }
         manager.resize(width,height);
     }
-    return { init, start, stop, timeto, addEventListener, resize, getMillTime, setVolume, getVolume,
+    return { create, init, start, stop, timeto, addEventListener, resize, getMillTime, setVolume, getVolume,
         get currentTime(){
           return video.currentTime;
         },

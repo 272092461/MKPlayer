@@ -23,17 +23,21 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
         // video.style.visibility = "hidden";
         fragment.appendChild(video);
         fragment.appendChild(canvas);
-        player.addEventListener('load',() => fragment.appendChild(controls));
+        player.addEventListener('load',() => {
+          fragment.appendChild(controls)
+          textArea = document.getElementById("comment-area");
+          control.sendBtn = document.getElementById("comment-sender");
+          initListener();
+        });
 
         MKPlayer.appendChild(fragment);
-        textArea = document.getElementById("comment-area");
-        control.sendBtn = document.getElementById("comment-sender");
+
         player.init(video,canvas,commentUrl,socket_url);
         sender.init();
         // if(MKPlayer.getAttribute("autoplay")){
         //     autoPlay();
         // }
-        initListener();
+
         video.addEventListener('resize',function(){
           player.resize(video.offsetWidth);
         });
@@ -45,26 +49,29 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
      * @param  {[type]} video_url [description]
      * @return {[type]}           [description]
      */
-    // function create({ dom, video_url, width }){
-    //   if(!dom){
-    //     console.error('请为播放器挂载节点');
-    //   }
-    //   MKPlayer = dom;
-    //   video = buildVideo( video_url, width );
-    //   let fragment = _("div","player-body");
-    //   var controls = buildControls();
-    //   let canvas = _("canvas","comment-canvas");
-    //   fragment.appendChild(video);
-    //   fragment.appendChild(canvas);
-    //   fragment.appendChild(controls);
-    //   MKPlayer.appendChild(fragment);
-    //   textArea = document.getElementById("comment-area");
-    //   control.sendBtn = document.getElementById("comment-sender");
-    //   sender.init();
-    //   initListener();
-    //
-    //   return { canvas, video };
-    // }
+    function create({ dom, video_url, width }){
+      if(!dom){
+        console.error('请为播放器挂载节点');
+      }
+      dom.classList.add('MKPlayer');
+      MKPlayer = dom;
+      video = buildVideo( video_url, width );
+      var controls = buildControls();
+      var fragment = _("div","player-body");
+      var canvas = _("canvas","comment-canvas");
+      fragment.appendChild(video);
+      fragment.appendChild(canvas);
+      MKPlayer.appendChild(fragment);
+      player.addEventListener('load',() => {
+        fragment.appendChild(controls)
+        textArea = document.getElementById("comment-area");
+        control.sendBtn = document.getElementById("comment-sender");
+        initListener();
+      });
+      sender.init();
+
+      return { canvas, video };
+    }
     function buildVideo(url,width,height){
         url = url.split(";");
         var video = document.createElement("video");
@@ -337,5 +344,5 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
     function stop(){
         control.playButton.className = "control-play iconfont icon-play btn-left";
     }
-    return{ build, setLoadLine, setPlayLine, turnFullscreen, turnWindow, play, stop };
+    return{ create, build, setLoadLine, setPlayLine, turnFullscreen, turnWindow, play, stop };
 });

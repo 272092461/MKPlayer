@@ -38,7 +38,8 @@ module.exports = {
       'socketIO': 'socket.io-client',
       'require': resolve('src/js/require'),
       'run': resolve('src/js/run'),
-      'Event': resolve('src/js/PlayerEvent')
+      'Event': resolve('src/js/PlayerEvent'),
+      'MKPlayer-builder': resolve('src/js/MKPlayer-builder'),
     }
   },
   module: {

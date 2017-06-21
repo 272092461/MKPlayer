@@ -9,29 +9,45 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
     var time = 0;
     var position = 0;
     var innerTime = 15;                                     //每帧canvas时间
-    var csa = {};
-    csa.init = function(_width,_height){
-        for(var name in this){
-            if("init" in this[name]){
-                this[name].init(_width,_height);
-            }
-        }
-    };
-    csa.resize = function(_width,_height){
-        for(var name in this){
-            if("resize" in this[name]){
-                this[name].resize(_width,_height);
-            }
-        }
-    };
+    // var csa = {};
+    var csa = [];
+    Object.assign(csa,{
+      init: function(_width,_height){
+        this.forEach(( item, index ) => item.init(_width,_height));
+      },
+      resize: function(_width,_height){
+        this.forEach(( item, index ) => item.resize(_width,_height));
+      },
+      clear: function(){
+        this.forEach( ( item, index ) => item.clear() );
+      }
+    });
+    // csa.init = function(_width,_height){
+    //     for(var name in this){
+    //         if("init" in this[name]){
+    //             this[name].init(_width,_height);
+    //         }
+    //     }
+    // };
+    // csa.resize = function(_width,_height){
+    //     for(var name in this){
+    //         if("resize" in this[name]){
+    //             this[name].resize(_width,_height);
+    //         }
+    //     }
+    // };
     function init(_canvas,_url,socket_url,_video){
         MKCanvas.bind(_canvas);
         builder.init();
-        csa.scroll = comment.create();
-        csa.scrollbtm = comment.create();
-        csa.bottom = comment.create();
-        csa.top = comment.create();
-        csa.reserve = comment.create();
+        csa[1] = csa[2] = csa[3] = comment.create();
+        csa[4] = comment.create();
+        csa[5] = comment.create();
+        csa[6] = comment.create();
+        // csa.scroll = comment.create();
+        // csa.scrollbtm = comment.create();
+        // csa.bottom = comment.create();
+        // csa.top = comment.create();
+        // csa.reserve = comment.create();
         csa.init(_canvas.width,_canvas.height);
         socket.init(socket_url,receiveCommentXML);
         video = _video;
@@ -127,11 +143,12 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
         position = binSearch(time,timeline);
         runline=[];
         MKCanvas.clear();
-        csa.scroll.clear();
-        csa.scrollbtm.clear();
-        csa.bottom.clear();
-        csa.top.clear();
-        csa.reserve.clear();
+        csa.forEach(( item, index ) => item.clear());
+        // csa.scroll.clear();
+        // csa.scrollbtm.clear();
+        // csa.bottom.clear();
+        // csa.top.clear();
+        // csa.reserve.clear();
         stop();
         start();
     }
@@ -153,27 +170,27 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
         switch(cmt.mode){
             case 1:{
                 cmt.align=0;
-                csa.scroll.add(cmt);
+                csa[1].add(cmt);
                 break;
             }
             case 2:{
                 cmt.align=2;
-                csa.scrollbtm.add(cmt);
+                csa[2].add(cmt);
                 break;
             }
             case 4:{
                 cmt.align=2;
-                csa.bottom.add(cmt);
+                csa[4].add(cmt);
                 break;
             }
             case 5:{
                 cmt.align=0;
-                csa.top.add(cmt);
+                csa[5].add(cmt);
                 break;
             }
             case 6:{
                 cmt.align=1;
-                csa.reserve.add(cmt);
+                csa[6].add(cmt);
                 break;
             }
         }
@@ -181,27 +198,28 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
         runline.push(cmt);
     }
     function commentRemove(comment){
-        var index = runline.indexOf(comment);
+        var index = runline.indexOf( comment );
         if(index != -1){
-            runline.splice(index,1);
+            runline.splice( index, 1 );
         }
-        switch(comment.mode){
-            case 1:
-                csa.scroll.remove(comment);
-                break;
-            case 2:
-                csa.scrollbtm.remove(comment);
-                break;
-            case 4:
-                csa.bottom.remove(comment);
-                break;
-            case 5:
-                csa.top.remove(comment);
-                break;
-            case 6:
-                csa.reserve.remove(comment);
-                break;
-        }
+        csa[comment.mode].remove( comment );
+        // switch(comment.mode){
+        //     case 1:
+        //         csa.scroll.remove(comment);
+        //         break;
+        //     case 2:
+        //         csa.scrollbtm.remove(comment);
+        //         break;
+        //     case 4:
+        //         csa.bottom.remove(comment);
+        //         break;
+        //     case 5:
+        //         csa.top.remove(comment);
+        //         break;
+        //     case 6:
+        //         csa.reserve.remove(comment);
+        //         break;
+        // }
     }
     function resize(_width,_height){
         width = _width;
@@ -289,11 +307,12 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
       position = 0;
       runline=[];
       MKCanvas.clear();
-      csa.scroll.clear();
-      csa.scrollbtm.clear();
-      csa.bottom.clear();
-      csa.top.clear();
-      csa.reserve.clear();
+      csa.clear()
+      // csa.scroll.clear();
+      // csa.scrollbtm.clear();
+      // csa.bottom.clear();
+      // csa.top.clear();
+      // csa.reserve.clear();
     }
     return{ init, start, stop, timeto, addEventListener, resize, getTime, receiveComment, reset };
 });
