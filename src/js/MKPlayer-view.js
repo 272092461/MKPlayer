@@ -5,56 +5,51 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
     var height;
     var width;
     var textArea;
-    function build(Player){
-        MKPlayer = Player;
-        var videoUrl = MKPlayer.getAttribute("video-url");
-        var commentUrl = MKPlayer.getAttribute("comment-url");
-        var socket_url = MKPlayer.getAttribute("socket-url");
-        var width = parseInt(MKPlayer.getAttribute("width")) || 800;
+    // function build(Player){
+    //     MKPlayer = Player;
+    //     var videoUrl = MKPlayer.getAttribute("video-url");
+    //     var commentUrl = MKPlayer.getAttribute("comment-url");
+    //     var socket_url = MKPlayer.getAttribute("socket-url");
+    //     var width = parseInt(MKPlayer.getAttribute("width")) || 800;
+    //
+    //
+    //     var fragment = _("div","player-body");
+    //
+    //     video = buildVideo(videoUrl,width);
+    //
+    //     var canvas = _("canvas","comment-canvas");
+    //     var controls = buildControls();
+    //
+    //     // video.style.visibility = "hidden";
+    //     fragment.appendChild(video);
+    //     fragment.appendChild(canvas);
+    //     player.addEventListener('load',() => {
+    //       fragment.appendChild(controls)
+    //       textArea = document.getElementById("comment-area");
+    //       control.sendBtn = document.getElementById("comment-sender");
+    //       initListener();
+    //     });
+    //
+    //     MKPlayer.appendChild(fragment);
+    //
+    //     player.init(video,canvas,commentUrl,socket_url);
+    //     sender.init();
+    //     // if(MKPlayer.getAttribute("autoplay")){
+    //     //     autoPlay();
+    //     // }
+    //
+    //     video.addEventListener('resize',function(){
+    //       player.resize(video.offsetWidth);
+    //     });
+    //
+    // }
 
-
-        var fragment = _("div","player-body");
-
-        video = buildVideo(videoUrl,width);
-
-        var canvas = _("canvas","comment-canvas");
-        var controls = buildControls();
-
-        // video.style.visibility = "hidden";
-        fragment.appendChild(video);
-        fragment.appendChild(canvas);
-        player.addEventListener('load',() => {
-          fragment.appendChild(controls)
-          textArea = document.getElementById("comment-area");
-          control.sendBtn = document.getElementById("comment-sender");
-          initListener();
-        });
-
-        MKPlayer.appendChild(fragment);
-
-        player.init(video,canvas,commentUrl,socket_url);
-        sender.init();
-        // if(MKPlayer.getAttribute("autoplay")){
-        //     autoPlay();
-        // }
-
-        video.addEventListener('resize',function(){
-          player.resize(video.offsetWidth);
-        });
-
-    }
-    /**
-     * [create description]
-     * @param  {[type]} dom       [description]
-     * @param  {[type]} video_url [description]
-     * @return {[type]}           [description]
-     */
-    function create({ dom, video_url, width }){
-      if(!dom){
+    function create({ el, video_url, width }){
+      if(!el){
         console.error('请为播放器挂载节点');
       }
-      dom.classList.add('MKPlayer');
-      MKPlayer = dom;
+      el.classList.add('MKPlayer');
+      MKPlayer = el;
       video = buildVideo( video_url, width );
       var controls = buildControls();
       var fragment = _("div","player-body");
@@ -175,7 +170,7 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
         playerEvent.on('loadTime', setLoadLine);
         playerEvent.on('playTime', setPlayLine);
         playerEvent.on('fullscreen', turnFullscreen);
-        playerEvent.on('turnWindow' , turnWindow);
+
         video.addEventListener("durationchange",function(){
             bar.init({
                 duration:video.duration,
@@ -332,10 +327,9 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
         (() => console.error('exit fullscreen failed'));
         docElm.exitFullscreen();
     }
-    function turnWindow(){
+    function turnWindow(width = 800){
         exitFullscreen(MKPlayer);
         MKPlayer.style.transform = "";
-        var width = parseInt(MKPlayer.getAttribute("width")) || 800;
         player.resize(width);
     }
     function play(){
@@ -344,5 +338,5 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
     function stop(){
         control.playButton.className = "control-play iconfont icon-play btn-left";
     }
-    return{ create, build, setLoadLine, setPlayLine, turnFullscreen, turnWindow, play, stop };
+    return{ create, setLoadLine, setPlayLine, turnFullscreen, turnWindow, play, stop };
 });

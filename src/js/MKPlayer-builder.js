@@ -1,14 +1,18 @@
 define(['Event','MKPlayer-view','MKPlayer'],function( {playerEvent}, view, player ){
-  let container,video_url,comment_url,socket_url,width,height;
-  function build({ container: dom, video_url: v_url, comment_url: c_url, socket_url: s_url, width: _width, height:_height }){
-    container = dom;
-    video_url = v_url;
-    comment_url = c_url;
-    socket_url = s_url;
-    width = _width;
-    height = _height;
-    let { canvas, video: _video } = view.create({ dom, video_url, width });
-    player.create({ canvas, video: _video, comment_url, socket_url });
+  let $el,_video_url,_comment_url,_socket_url,_width,_height;
+  function build({ el, video_url, comment_url, socket_url, width, height }){
+    $el = el;
+    _video_url = video_url;
+    _comment_url = comment_url;
+    _socket_url = socket_url;
+    _width = width;
+    _height = height;
+    let { canvas, video } = view.create({ el, video_url, width });
+    player.create({ canvas, video, comment_url, socket_url });
+    initListener();
+  }
+  function initListener(){
+    playerEvent.on('turnWindow' , () => view.turnWindow(_width));
   }
   return {build}
 })

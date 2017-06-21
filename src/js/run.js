@@ -9,7 +9,7 @@ define(["MKPlayer-view","MKPlayer-builder"],function(view,builder){
     document.body.appendChild(el);
 
     builder.build({
-      container: el,
+      el:el,
       video_url: 'static/crayon_937.mp4',
       comment_url: 'static/comment-otsukimi.xml',
       socket_url: 'ws://127.0.0.1:8080/comment-otsukimi.xml',

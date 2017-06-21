@@ -171,31 +171,35 @@ define(["MKCanvas","CommentSpaceAllocator","CommentLoader","CommentParser","Comm
             case 1:{
                 cmt.align=0;
                 csa[1].add(cmt);
+                runline.push(cmt);
                 break;
             }
             case 2:{
                 cmt.align=2;
                 csa[2].add(cmt);
+                runline.push(cmt);
                 break;
             }
             case 4:{
                 cmt.align=2;
                 csa[4].add(cmt);
+                runline.push(cmt);
                 break;
             }
             case 5:{
                 cmt.align=0;
                 csa[5].add(cmt);
+                runline.push(cmt);
                 break;
             }
             case 6:{
                 cmt.align=1;
                 csa[6].add(cmt);
+                runline.push(cmt);
                 break;
             }
         }
         cmt.onFinish = commentRemove;
-        runline.push(cmt);
     }
     function commentRemove(comment){
         var index = runline.indexOf( comment );
