@@ -70,7 +70,8 @@ define(["MKPlayer","ControlBar","CommentSender",'Event'],function(player,bar,sen
     function buildVideo(url,width,height){
         url = url.split(";");
         var video = document.createElement("video");
-
+        video.setAttribute('playsinline','');
+        video.setAttribute('webkit-playsinline','');
         for(var i = 0; i < url.length;i++){
             var source = document.createElement("source");
             source.setAttribute("src",url[i]);
