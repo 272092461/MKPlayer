@@ -3,9 +3,6 @@
 ### 源代码
 源代码地址：[GitHub](https://github.com/272092461/MKPlayer)
 
-### 在线预览：
-在线预览地址：[弹幕播放器](http://115.159.3.200:2333)(移动端非Chrome浏览器不支持弹幕播放，PC端浏览器支持IE10+)
-
 ### Build Setup
 
 ```bash
